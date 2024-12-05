@@ -1,5 +1,3 @@
-import { StyleSheet} from 'react-native'
-import React from 'react'
 import MainScreen from '../../src/screens/MainScreen'
 import SignupScreen from '../../src/screens/SignupScreen'
 import LoginScreen from '../../src/screens/LoginScreen'
@@ -15,11 +13,21 @@ import AnnouncementPreferencesScreen from '../../src/screens/AnnouncementPrefere
 import PasswordChangeScreen from '../../src/screens/PasswordChangeScreen'
 import LogoutScreen from '../../src/screens/LogoutScreen'
 import SurveyScreen from '../../src/screens/SurveyScreen'
-import RootNavigation from '../../src/navigation/rootNavigation'
 
-const index = () => {
-  console.log("hi")
-  return <RootNavigation/>
+export{
+  MainScreen,
+  SignupScreen,
+  LoginScreen,
+  CalendarScreen,
+  HomePageScreen,
+  UserProfileInfoScreen,
+  UserProfileScreen,
+  UserCustomizeSurpriseScreen,
+  UserAddressInfoScreen,
+  CargoTrackingScreen,
+  EMailChangeScreen,
+  AnnouncementPreferencesScreen,
+  PasswordChangeScreen,
+  LogoutScreen,
+  SurveyScreen
 }
-
-export default index
