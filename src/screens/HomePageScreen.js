@@ -117,7 +117,9 @@ const HomePageScreen = ( {navigation}) => {
          </ScrollView>
         <View style={styles.optionsAndMenusContainer}>
             <View style={styles.giftToSomebodyContainer}>
-                <TouchableOpacity style={styles.optionBox}>
+                <TouchableOpacity 
+                style={styles.optionBox}
+                onPress={() => navigation.navigate('MakeSurpriseForYourLovedScreen')}>
                 <Image
                 source={require('@/assets/images/gift-to-sb.gif')} 
                 style={styles.giftToSomebodyLogo}
@@ -125,7 +127,9 @@ const HomePageScreen = ( {navigation}) => {
                 <Text style={styles.optionText}>SEVDİKLERİNE SÜRPRİZ YAP</Text>
                 </TouchableOpacity>
             </View>
-            <View style={styles.gifYourselfContainer}>
+            <View 
+            style={styles.gifYourselfContainer}
+            onPress={() => navigation.navigate('MakeSurpriseForYourself')}>
                 <TouchableOpacity style={styles.optionBox}>
                 <Image
                     source={require('@/assets/images/gift-yourself.gif')} 

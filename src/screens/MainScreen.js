@@ -21,7 +21,7 @@ const MainScreen = ( {navigation} ) => {
       <View style={styles.buttonContainer}>
       <TouchableOpacity
         style={styles.loginButton}
-        onPress={() => navigation.navigate('SurveyScreen')}
+        onPress={() => navigation.navigate('MakeSurpriseForYourLovedScreen')}
       >
         <Text style={styles.buttonText}>Giriş Yap</Text>
       </TouchableOpacity>

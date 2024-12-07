@@ -2,71 +2,55 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
 import BottomBarNavigation from "../components/BottomBarNavigation";
 
-
 const UserCustomizeSurpriseScreen = ({ navigation }) => {
-  const [selectedTags, setSelectedTags] = useState([]);
   const [budget, setBudget] = useState('');
+  const [note, setNote] = useState('');
+  const isButtonDisabled = !budget;
 
-  const tags = ["Aile", "Sevgili", "Arkadaş", "Özel Gün", "Diğer"];
-
-  const toggleTag = (tag) => {
-    setSelectedTags((prevSelectedTags) => 
-      prevSelectedTags.includes(tag)
-        ? prevSelectedTags.filter((t) => t !== tag)
-        : [...prevSelectedTags, tag] 
-    );
+  const handleNavigate = () => {
+    navigation.navigate('OrderSummaryScreen', { budget, note });
   };
 
   return (
     <View style={styles.containerWithBottomBar}>
-        <View style={styles.container}>
-            <Text style={styles.header}>Sürprizini Özelleştir</Text>
-            <Image 
-                source={require('@/assets/images/surpriseBasket.png')} 
-                style={styles.image}
-            />
-            <View style={styles.budgetContainer}>
-                <Text style={styles.budgetLabel}>Bütçeniz:</Text>
-                <TextInput
-                style={styles.budgetInput}
-                keyboardType="numeric"
-                placeholder="₺"
-                value={budget}
-                onChangeText={(text) => setBudget(text)}
-                />
-            </View>
+      <View style={styles.container}>
+        <Text style={styles.header}>Sürprizini Özelleştir</Text>
+        <Image 
+          source={require('@/assets/images/surpriseBasket.png')} 
+          style={styles.image}
+        />
+        <View style={styles.budgetContainer}>
+          <Text style={styles.budgetLabel}>Bütçeniz:</Text>
+          <TextInput
+            style={styles.budgetInput}
+            keyboardType="numeric"
+            placeholder="₺"
+            value={budget}
+            onChangeText={(text) => setBudget(text)}
+          />
+        </View>
+        <View style={styles.noteContainer}>
+          <Text style={styles.noteLabel}>Not:</Text>
+          <TextInput 
+            style={styles.noteInput} 
+            multiline 
+            placeholder="Buraya notunuzu yazın..."
+            value={note}
+            onChangeText={(text) => setNote(text)}
+          />
+        </View>
 
-            <View style={styles.tagsContainer}>
-                {tags.map((tag) => (
-                <TouchableOpacity
-                    key={tag}
-                    onPress={() => toggleTag(tag)}
-                    style={[
-                    styles.tag,
-                    selectedTags.includes(tag) && styles.selectedTag,
-                    ]}
-                >
-                    <Text style={styles.tagText}>{tag}</Text>
-                </TouchableOpacity>
-                ))}
-            </View>
-
-            <View style={styles.noteContainer}>
-                <Text style={styles.noteLabel}>Not:</Text>
-                <TextInput 
-                style={styles.noteInput} 
-                multiline 
-                placeholder="Buraya notunuzu yazın..."
-                />
-            </View>
-
-            <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>Tamamla ve Sepete Ekle</Text>
-            </TouchableOpacity>
-            </View>
-      <BottomBarNavigation navigation={navigation}/>
+        <TouchableOpacity
+          style={[styles.button, isButtonDisabled && styles.buttonDisabled]}
+          onPress={handleNavigate}  
+          disabled={isButtonDisabled} 
+        >
+          
+          <Text style={styles.buttonText}>Tamamla ve Sepete Ekle</Text>
+        </TouchableOpacity>
+      </View>
+      <BottomBarNavigation navigation={navigation} />
     </View>
-    
   );
 };
 
@@ -77,9 +61,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#eedaf0',
     paddingHorizontal: 25,
-    paddingVertical: 30
+    paddingVertical: 30,
   },
-  containerWithBottomBar:{
+  containerWithBottomBar: {
     flex: 1,
     backgroundColor: '#eedaf0',
   },
@@ -87,14 +71,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 25,
-    marginTop: 20
+    marginTop: 20,
   },
   image: {
     width: 150,
     height: 150,
     alignSelf: 'center',
     marginBottom: 40,
-    marginTop: 30
+    marginTop: 30,
   },
   budgetContainer: {
     flexDirection: 'row',
@@ -116,31 +100,6 @@ const styles = StyleSheet.create({
     paddingBottom: -1,
     paddingTop: -1,
     textAlign: 'center',
-  },
-  budgetBox: {
-    width: 100,
-    height: 30,
-    backgroundColor: '#d9a4f7',
-    borderRadius: 5,
-  },
-  tagsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  tag: {
-    backgroundColor: '#d9a4f7',
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-    fontSize: 14,
-    marginHorizontal: 2,
-  },
-  selectedTag: {
-    backgroundColor: '#8A2BE2', 
-  },
-  tagText: {
-    color: '#fff',
   },
   noteContainer: {
     marginBottom: 20,
@@ -168,5 +127,8 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  buttonDisabled: {
+    backgroundColor: '#d3d3d3',  
   },
 });

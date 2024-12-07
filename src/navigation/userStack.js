@@ -2,7 +2,8 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { HomePageScreen, AnnouncementPreferencesScreen, CalendarScreen, EMailChangeScreen,
         PasswordChangeScreen, SurveyScreen, UserAddressInfoScreen, UserCustomizeSurpriseScreen, CargoTrackingScreen,
-        UserProfileInfoScreen, UserProfileScreen, LogoutScreen } from '../screens'
+        UserProfileInfoScreen, UserProfileScreen, LogoutScreen, MakeSurpriseForYourself, MakeSurpriseForYourLovedScreen,
+         AddUserRelative, OrderSummaryScreen } from '../screens'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'  
 const Stack = createNativeStackNavigator();
 const UserStack = () => {
@@ -19,6 +20,16 @@ const UserStack = () => {
         <Stack.Screen 
           name="CalendarScreen" 
           component={CalendarScreen} 
+          options={{ headerShown: false }} 
+        />
+        <Stack.Screen 
+          name="OrderSummaryScreen" 
+          component={OrderSummaryScreen} 
+          options={{ headerShown: false }} 
+        />
+        <Stack.Screen 
+          name="AddUserRelative" 
+          component={AddUserRelative} 
           options={{ headerShown: false }} 
         />
         <Stack.Screen 
@@ -69,6 +80,16 @@ const UserStack = () => {
         <Stack.Screen 
           name="SurveyScreen" 
           component={SurveyScreen} 
+          options={{ headerShown: false }} 
+        />
+        <Stack.Screen 
+          name="MakeSurpriseForYourLovedScreen" 
+          component={MakeSurpriseForYourLovedScreen} 
+          options={{ headerShown: false }} 
+        />
+        <Stack.Screen 
+          name="MakeSurpriseForYourself" 
+          component={MakeSurpriseForYourself} 
           options={{ headerShown: false }} 
         />
     </Stack.Navigator>

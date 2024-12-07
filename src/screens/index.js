@@ -13,6 +13,10 @@ import AnnouncementPreferencesScreen from '../../src/screens/AnnouncementPrefere
 import PasswordChangeScreen from '../../src/screens/PasswordChangeScreen'
 import LogoutScreen from '../../src/screens/LogoutScreen'
 import SurveyScreen from '../../src/screens/SurveyScreen'
+import MakeSurpriseForYourself from '../../src/screens/MakeSurpriseForYourself'
+import MakeSurpriseForYourLovedScreen from '../../src/screens/MakeSurpriseForYourLovedScreen'
+import AddUserRelative from '../../src/screens/AddUserRelative'
+import OrderSummaryScreen from '../../src/screens/OrderSummaryScreen'
 
 export{
   MainScreen,
@@ -22,6 +26,10 @@ export{
   HomePageScreen,
   UserProfileInfoScreen,
   UserProfileScreen,
+  AddUserRelative,
+  OrderSummaryScreen,
+  MakeSurpriseForYourself,
+  MakeSurpriseForYourLovedScreen,
   UserCustomizeSurpriseScreen,
   UserAddressInfoScreen,
   CargoTrackingScreen,
