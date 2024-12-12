@@ -36,7 +36,6 @@ const OrderSummaryScreen = ({ route }) => {
     }
 
     Alert.alert('Başarılı', 'Sipariş başarıyla oluşturuldu!');
-    // Sipariş oluşturma işlemi burada yapılabilir.
   };
 
   return (

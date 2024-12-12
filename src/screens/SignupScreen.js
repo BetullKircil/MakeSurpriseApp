@@ -50,7 +50,7 @@ const SignupScreen = ({navigation}) => {
   
     try {
       // Fetch isteği
-      const response = await fetch("http://192.168.1.107:5159/Auth/Register", {
+      const response = await fetch("http://192.168.1.129:5159/Auth/Register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

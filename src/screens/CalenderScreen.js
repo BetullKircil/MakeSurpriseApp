@@ -1,7 +1,8 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { StyleSheet, Text, View, Modal, TextInput, Button, FlatList, TouchableOpacity } from "react-native";
 import CalendarPicker from "react-native-calendar-picker";
 import BottomBarNavigation from "../components/BottomBarNavigation";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CalenderScreen = ({ navigation }) => {
   const [selectedStartDate, setSelectedStartDate] = useState(null);
@@ -9,33 +10,72 @@ const CalenderScreen = ({ navigation }) => {
   const [eventTitle, setEventTitle] = useState("");
   const [events, setEvents] = useState([]);
 
+  async function getAllDates(){
+    const UserId = Number(await getData("userID"));
+    const response = await fetch(`http://192.168.1.129:5159/SpecialDayCalendar/GetAllSpecialDays?userId=${UserId}`)
+    const data = await response.json();
+    const specialDate = data["$values"]
+    const specialDateArray = [];
+    specialDate.forEach(specialDay => {
+      specialDateArray.push({id: specialDay.specialDayId, title: specialDay.title, date: new Date(specialDay.specialDayDate + "Z")})
+    });
+    setEvents(specialDateArray);
+  }
+  
+  useEffect(
+    () => {
+      getAllDates();
+    }
+  )
+
+  const getData = async (key) => {
+    try {
+      const value = await AsyncStorage.getItem(key);
+      return value;
+    } catch (error) {
+      console.error("Hata oluştu:", error);
+    }
+  }
   const onDateChange = useCallback((date) => {
     setSelectedStartDate(date);
     setIsModalVisible(true); 
   }, []);
 
-  const startDate = selectedStartDate ? selectedStartDate.toDateString() : "";
+  const startDate = selectedStartDate ? selectedStartDate.toISOString() : "";
+  const selectedSpecialDate = selectedStartDate ? selectedStartDate.toDateString() : "";
 
   async function saveEvent(){
     if (selectedStartDate && eventTitle) {
-      const response = await fetch("http://192.168.1.107:5159/SpecialDayCalender/AddSpecialDay", 
+      const UserId = Number(await getData("userID"));
+      const response = await fetch("http://192.168.1.129:5159/SpecialDayCalendar/AddSpecialDay", 
         {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({Title: eventTitle, SpecialDayDate: selectedStartDate})
+          body: JSON.stringify({Title: eventTitle, SpecialDayDate: startDate, UserId: UserId})
         }
       )
-      setEvents((prevEvents) => [
-        ...prevEvents,
-        { id: selectedStartDate.toString(), date: startDate, title: eventTitle },
-      ]);
+      if(response.ok){
+        const data = await response.json()
+        setEvents((prevEvents) => [
+          ...prevEvents,
+          { id: data.specialDayId, date: new Date(data.specialDayDate), title: data.title },
+        ]);
+      }
       setEventTitle("");
       setIsModalVisible(false);
     }
   };
 
-  const deleteEvent = (id) => {
-    setEvents((prevEvents) => prevEvents.filter(event => event.id !== id));
+  async function deleteEvent(id){
+    const response = await fetch(`http://192.168.1.129:5159/SpecialDayCalendar/DeleteSpecialDay?specialDayId=${id}` , 
+        {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+        }
+    )
+    if(response.ok){
+      setEvents((prevEvents) => prevEvents.filter(event => event.id !== id));
+    }
   };
 
   return (
@@ -43,7 +83,7 @@ const CalenderScreen = ({ navigation }) => {
       <CalendarPicker onDateChange={onDateChange} />
       <View style={styles.calenderContainer}>
         <Text style={styles.calenderText}>Seçilen Gün: </Text>
-        <Text style={styles.dateText}>{startDate}</Text>
+        <Text style={styles.dateText}>{selectedSpecialDate}</Text>
       </View>
 
       <Modal
@@ -76,7 +116,7 @@ const CalenderScreen = ({ navigation }) => {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View style={styles.eventItem}>
-              <Text style={styles.eventDate}>{item.date}</Text>
+              <Text style={styles.eventDate}>{item.date.getDate()}/{item.date.getMonth() + 1}/{item.date.getFullYear()}</Text>
               <Text style={styles.eventTitle}>{item.title}</Text>
               <TouchableOpacity onPress={() => deleteEvent(item.id)} style={styles.deleteButton}>
                 <Text style={styles.deleteButtonText}>Sil</Text>
@@ -97,7 +137,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#eedaf0",
-    marginTop: 100,
   },
   calenderContainer: {
     flexDirection: 'row',

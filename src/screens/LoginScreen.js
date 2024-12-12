@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import Loading from "../../src/components/Loading"
 import { Image, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const  HomeScreen = ({navigation}) =>{
   const [password, setPassword] = useState('');
@@ -36,7 +37,7 @@ const  HomeScreen = ({navigation}) =>{
       Email: email,
       Password: password,
     };
-    const response = await fetch("http://192.168.1.107:5159/Auth/Login", {
+    const response = await fetch("http://192.168.1.129:5159/Auth/Login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -45,11 +46,11 @@ const  HomeScreen = ({navigation}) =>{
     });
     if(response.ok){
       const data = await response.json()
-      
-      setIsLoading(true);
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 4000);
+      await storeData("userID", data.user.userId.toString())
+      // setIsLoading(true);
+      // setTimeout(() => {
+      //   setIsLoading(false);
+      // }, 4000);
     navigation.navigate('HomePageScreen')
     } 
   };
