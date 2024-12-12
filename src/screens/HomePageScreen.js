@@ -129,8 +129,10 @@ const HomePageScreen = ( {navigation}) => {
             </View>
             <View 
             style={styles.gifYourselfContainer}
-            onPress={() => navigation.navigate('MakeSurpriseForYourself')}>
-                <TouchableOpacity style={styles.optionBox}>
+            >
+                <TouchableOpacity style={styles.optionBox}
+                onPress={() => navigation.navigate('SurveyScreen')}
+                >
                 <Image
                     source={require('@/assets/images/gift-yourself.gif')} 
                     style={styles.giftYourselfLogo}

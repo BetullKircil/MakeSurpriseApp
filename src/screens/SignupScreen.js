@@ -37,6 +37,45 @@ const SignupScreen = ({navigation}) => {
     }, 4000);
   };
 
+  async function signupHandle() {
+    // Giriş verilerini oluşturuyoruz
+    const requestData = {
+      FirstName: firstName,
+      LastName: lastName,
+      Email: email,
+      Password: password,
+    };
+  
+    console.log("Request Data:", requestData);
+  
+    try {
+      // Fetch isteği
+      const response = await fetch("http://192.168.1.107:5159/Auth/Register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+  
+      // HTTP yanıt durumunu kontrol ediyoruz
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      // Yanıtı JSON formatında alıyoruz
+      const responseData = await response.json();
+      console.log("Response Data:", responseData);
+  
+      // Başarılı yanıt durumunda bir işlem yapılabilir
+      // Örneğin, kullanıcıyı başka bir sayfaya yönlendirme
+    } catch (error) {
+      // Hata durumunu ele alıyoruz
+      console.error("Error during signup request:", error);
+    }
+  }
+  
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Kayıt</Text>
@@ -49,6 +88,7 @@ const SignupScreen = ({navigation}) => {
         placeholder="Ad" 
         style={styles.input}
         onChangeText={(value) => setFirstName(value)}
+        value={firstName}
       />
       <TextInput
         placeholder="Soyad"
@@ -80,7 +120,7 @@ const SignupScreen = ({navigation}) => {
       </View>
       <TouchableOpacity
         style={[styles.registerButton, { opacity: isButtonDisabled ? 0.5 : 1 }]}
-        onPress={handleLogin}
+        onPress={signupHandle}
         disabled={isButtonDisabled} 
       >
         <Text style={styles.buttonText}>Kaydol</Text>

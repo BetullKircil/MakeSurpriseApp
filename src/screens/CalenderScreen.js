@@ -16,8 +16,15 @@ const CalenderScreen = ({ navigation }) => {
 
   const startDate = selectedStartDate ? selectedStartDate.toDateString() : "";
 
-  const saveEvent = () => {
+  async function saveEvent(){
     if (selectedStartDate && eventTitle) {
+      const response = await fetch("http://192.168.1.107:5159/SpecialDayCalender/AddSpecialDay", 
+        {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({Title: eventTitle, SpecialDayDate: selectedStartDate})
+        }
+      )
       setEvents((prevEvents) => [
         ...prevEvents,
         { id: selectedStartDate.toString(), date: startDate, title: eventTitle },

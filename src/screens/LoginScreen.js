@@ -12,9 +12,16 @@ const  HomeScreen = ({navigation}) =>{
   const [isEmailTouched, setIsEmailTouched] = useState(false);
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+  const storeData = async (key, value) => {
+    try {
+      await AsyncStorage.setItem(key, value);
+    } catch (error) {
+      console.error("Hata oluştu:", error);
+    }
+  };
 
   const isButtonDisabled = email.trim() === '' || password.trim() === '';
-  const handleLogin = () => {
+  async function handleLogin(){
     setIsEmailTouched(true);
     const isEmailValid = emailRegex.test(email.trim()); 
     const isPasswordValid = password.trim() !== '';
@@ -25,12 +32,26 @@ const  HomeScreen = ({navigation}) =>{
     if (!isEmailValid || !isPasswordValid) {
       return; 
     }
-  
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 4000);
+    const requestData = {
+      Email: email,
+      Password: password,
+    };
+    const response = await fetch("http://192.168.1.107:5159/Auth/Login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestData),
+    });
+    if(response.ok){
+      const data = await response.json()
+      
+      setIsLoading(true);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 4000);
     navigation.navigate('HomePageScreen')
+    } 
   };
   return (
     <View style={styles.container}>
@@ -40,8 +61,6 @@ const  HomeScreen = ({navigation}) =>{
         source={require('@/assets/images/login-person.png')} 
         style={styles.logo}
       />
-      
-
       <TextInput 
         onChangeText={(value) => setEmail(value)}
         placeholder="E-mail" 
@@ -63,8 +82,6 @@ const  HomeScreen = ({navigation}) =>{
         />
         <Text style={styles.buttonText}> ile Giriş Yap</Text>
         </View>
-        
-
       <TouchableOpacity
         style={[styles.loginButton, { opacity: email && password ? 1 : 0.5 }]}
         onPress={handleLogin}
