@@ -1,25 +1,35 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import React, {useState} from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Modal } from 'react-native';
 import BottomBarNavigation from "../components/BottomBarNavigation";
-
 import userInfoIcon from '@/assets/images/userInfo.png';
 import locationNotebookIcon from '@/assets/images/locationNotebook.png';
 import cargoTraceIcon from '@/assets/images/cargoTrace.png';
-import mailChangeIcon from '@/assets/images/mailChange.png';
 import passwordIcon from '@/assets/images/password.png';
 import announceIcon from '@/assets/images/announce.png';
-import logoutIcon from '@/assets/images/logout.png';
 
 const UserProfileScreen = ({navigation}) => {
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false); 
+  const [selectedMenu, setSelectedMenu] = useState('profile');
+
+  const handleMenuActivity = (menu) => {
+    setSelectedMenu(menu); 
+    navigation.navigate(menu);
+  };
       const menuItems = [
         { label: 'Kullanıcı Bilgilerim', icon: userInfoIcon, screen: 'UserProfileInfoScreen'},
         { label: 'Adres Defterim', icon: locationNotebookIcon, screen: 'UserAddressInfoScreen'},
         { label: 'Kargo Takibi', icon: cargoTraceIcon, screen: 'CargoTrackingScreen'},
-        { label: 'E-Mail Değişikliği', icon: mailChangeIcon, screen: 'EMailChangeScreen'},
         { label: 'Şifre Değişikliği', icon: passwordIcon, screen: 'PasswordChangeScreen'},
         { label: 'Duyuru Tercihlerim', icon: announceIcon, screen: 'AnnouncementPreferencesScreen'},
-        { label: 'Çıkış Yap', icon: logoutIcon, screen: 'LogoutScreen'},
       ];
+      const handleLogout = () => {
+        console.log("Çıkış yapılmadı.");
+        setLogoutModalVisible(true); 
+      };
+      const closeLogoutPopup = () => {
+        console.log("Çıkış yapıldı.");
+        setLogoutModalVisible(false); 
+      };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -41,8 +51,41 @@ const UserProfileScreen = ({navigation}) => {
           </TouchableOpacity>
         ))}
       </View>
-      <BottomBarNavigation navigation={navigation}/>
+      <View style={styles.menuContainer}>
+          <TouchableOpacity
+           style={styles.menuItem}
+           onPress={handleLogout}>
+            <Image source={require('@/assets/images/logout.png')} style={styles.menuIcon} />
+            <Text style={styles.menuText}>Logout</Text>
+          </TouchableOpacity>
+      </View>
+      <Modal
+        transparent={true}
+        visible={logoutModalVisible}
+        animationType="fade"
+        onRequestClose={() => setLogoutModalVisible(false)}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Çıkış Yap</Text>
+            <Text style={styles.modalMessage}>Hesabınızdan çıkış yapmak istediğinizden emin misiniz?</Text>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={() => setLogoutModalVisible(false)}>
+                <Text style={styles.modalButtonText}>Hayır</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.confirmButton]}
+                onPress={closeLogoutPopup}>
+                <Text style={styles.modalButtonText}>Evet</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+      <BottomBarNavigation selectedMenu={selectedMenu} navigation={navigation} onNavigate={handleMenuActivity}/>
     </View>
+    
   );
 }
 
@@ -55,6 +98,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 40,
   },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContainer: {
+    width: 300,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+  },
+  modalTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 10 },
+  modalMessage: { fontSize: 14, textAlign: 'center', marginBottom: 20 },
+  modalButtons: { flexDirection: 'row', justifyContent: 'space-between', width: '100%' },
+  modalButton: {
+    flex: 1,
+    paddingVertical: 10,
+    marginHorizontal: 5,
+    backgroundColor: '#ddd',
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  confirmButton: { backgroundColor: '#f00' },
+  modalButtonText: { color: 'white', fontWeight: 'bold' },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-around',

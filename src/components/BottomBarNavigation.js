@@ -1,8 +1,7 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import React, {useState} from 'react'
 
-const BottomBarNavigation = ({navigation}) => {
-    const [selectedMenu, setSelectedMenu] = useState('home');
+const BottomBarNavigation = ({selectedMenu, navigation}) => {
   return (
     <View style={styles.bottomNav}>
                 <TouchableOpacity 

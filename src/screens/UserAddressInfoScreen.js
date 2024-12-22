@@ -9,9 +9,23 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
+import { Dropdown } from 'react-native-element-dropdown';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 const UserAddressInfoScreen = ({navigation}) => {
+  const [value, setValue] = useState(null);
+  const [isFocus, setIsFocus] = useState(false);
   const [addresses, setAddresses] = useState([]);
+  const data = [
+    { label: 'Item 1', value: '1' },
+    { label: 'Item 2', value: '2' },
+    { label: 'Item 3', value: '3' },
+    { label: 'Item 4', value: '4' },
+    { label: 'Item 5', value: '5' },
+    { label: 'Item 6', value: '6' },
+    { label: 'Item 7', value: '7' },
+    { label: 'Item 8', value: '8' },
+  ];
   const [isModalVisible, setModalVisible] = useState(false);
   const [newAddress, setNewAddress] = useState({
     title: "",
@@ -86,31 +100,69 @@ const UserAddressInfoScreen = ({navigation}) => {
                 setNewAddress({ ...newAddress, title: text })
               }
             />
-            <TextInput
-              style={styles.input}
-              placeholder="Ad Soyad"
-              value={newAddress.name}
-              onChangeText={(text) =>
-                setNewAddress({ ...newAddress, name: text })
-              }
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Telefon"
-              value={newAddress.phone}
-              keyboardType="numeric"
-              onChangeText={(text) =>
-                setNewAddress({ ...newAddress, phone: text })
-              }
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="İl/İlçe"
-              value={newAddress.districtAndcity}
-              onChangeText={(text) =>
-                setNewAddress({ ...newAddress, city: text })
-              }
-            />
+            <View style={styles.dropdownContainer}>
+              <Dropdown
+                style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                iconStyle={styles.iconStyle}
+                data={data}
+                maxHeight={300}
+                labelField="label"
+                valueField="value"
+                placeholder={!isFocus ? 'İl Seçiniz' : '...'}
+                searchPlaceholder="Search..."
+                value={value}
+                onFocus={() => setIsFocus(true)}
+                onBlur={() => setIsFocus(false)}
+                onChange={item => {
+                  setValue(item.value);
+                  setIsFocus(false);
+                }}
+              />
+            </View>
+            <View style={styles.dropdownContainer}>
+              <Dropdown
+                style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                iconStyle={styles.iconStyle}
+                data={data}
+                maxHeight={300}
+                labelField="label"
+                valueField="value"
+                placeholder={!isFocus ? 'İlçe Seçiniz' : '...'}
+                searchPlaceholder="Search..."
+                value={value}
+                onFocus={() => setIsFocus(true)}
+                onBlur={() => setIsFocus(false)}
+                onChange={item => {
+                  setValue(item.value);
+                  setIsFocus(false);
+                }}
+              />
+            </View>
+            <View style={styles.dropdownContainer}>
+              <Dropdown
+                style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                iconStyle={styles.iconStyle}
+                data={data}
+                maxHeight={300}
+                labelField="label"
+                valueField="value"
+                placeholder={!isFocus ? 'Mahalle Seçiniz' : '...'}
+                searchPlaceholder="Search..."
+                value={value}
+                onFocus={() => setIsFocus(true)}
+                onBlur={() => setIsFocus(false)}
+                onChange={item => {
+                  setValue(item.value);
+                  setIsFocus(false);
+                }}
+              />
+            </View>
             <TextInput
               style={styles.input}
               placeholder="Açık Adres"
@@ -217,6 +269,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     marginBottom: 10,
+    marginTop: 6
   },
   modalButtons: {
     flexDirection: "row",
@@ -245,6 +298,44 @@ const styles = StyleSheet.create({
     color: "#fff",
     textAlign: "center",
     fontWeight: "bold",
+  },
+  dropdownContainer: {
+    backgroundColor: 'white',
+    paddingVertical: 5,
+  },
+  dropdown: {
+    height: 50,
+    borderColor: 'gray',
+    borderWidth: 0.5,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+  },
+  icon: {
+    marginRight: 5,
+  },
+  label: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    left: 22,
+    top: 8,
+    zIndex: 999,
+    paddingHorizontal: 8,
+    fontSize: 14,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+    color: "#636262"
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
   },
 });
 

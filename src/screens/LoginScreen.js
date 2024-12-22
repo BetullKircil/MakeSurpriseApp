@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import Loading from "../../src/components/Loading"
 import { Image, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {ipConfig} from "../../scripts/enums"
+
 
 const  HomeScreen = ({navigation}) =>{
   const [password, setPassword] = useState('');
@@ -10,6 +12,7 @@ const  HomeScreen = ({navigation}) =>{
   const [isLoading, setIsLoading] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isPasswordValid, setIsPasswordValid] = useState(true); 
+  const [errorMessage, setErrorMessage] = useState('');
   const [isEmailTouched, setIsEmailTouched] = useState(false);
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -37,7 +40,7 @@ const  HomeScreen = ({navigation}) =>{
       Email: email,
       Password: password,
     };
-    const response = await fetch("http://192.168.1.129:5159/Auth/Login", {
+    const response = await fetch(`${ipConfig}Auth/Login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -47,11 +50,14 @@ const  HomeScreen = ({navigation}) =>{
     if(response.ok){
       const data = await response.json()
       await storeData("userID", data.user.userId.toString())
-      // setIsLoading(true);
-      // setTimeout(() => {
-      //   setIsLoading(false);
-      // }, 4000);
+      setIsLoading(true);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 4000);
     navigation.navigate('HomePageScreen')
+    }
+    else{
+      setErrorMessage("Giriş bilgileri hatalı. Lütfen tekrar deneyin.");
     } 
   };
   return (
@@ -76,6 +82,7 @@ const  HomeScreen = ({navigation}) =>{
           style={styles.input}
           onChangeText={(value) => setPassword(value)}
         />
+        {errorMessage !== '' && <Text style={styles.stackErrorMessageText}>{errorMessage}</Text>}
         <View style={styles.loginWithSocialLinkContainer}>
         <Image
             source={require('@/assets/images/google-logo.png')}
@@ -152,6 +159,13 @@ const styles = StyleSheet.create({
     color: 'red',
     marginTop: -10,
     marginRight: 180,
+    fontSize: 10,
+    marginBottom: 10
+  },
+  stackErrorMessageText:{
+    color: 'red',
+    marginTop: -5,
+    marginRight: 95,
     fontSize: 10,
     marginBottom: 10
   },

@@ -2,23 +2,34 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
 import CheckBox from 'react-native-check-box';
 import { useNavigation } from '@react-navigation/native';
-import SelectDropdown from 'react-native-select-dropdown';
+import { Dropdown } from 'react-native-element-dropdown';
 
 const OrderSummaryScreen = ({ route }) => {
   const { budget, note } = route.params;
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState('');
   const [isChecked, setIsChecked] = useState(false);
+  const [isFocus, setIsFocus] = useState(false);const isOrderButtonDisabled = !selectedAddress || !isChecked || !budget || !note;
+
+
   const navigation = useNavigation();
 
   useEffect(() => {
-    const fetchedAddresses = [
-      { id: '1', label: 'Adres 1' },
-      { id: '2', label: 'Adres 2' },
-      { id: '3', label: 'Adres 3' },
-    ];
-    setAddresses(fetchedAddresses);
+    const fetchAddresses = async () => {
+      try {
+        const response = await fetch('https://your-api-endpoint.com/addresses');
+        const data = await response.json();
+        setAddresses(data.map(item => ({
+          id: item.id,
+          label: item.title, 
+        })));
+      } catch (error) {
+        console.error('Adresler alınırken hata oluştu:', error);
+      }
+    };
+    fetchAddresses();
   }, []);
+  
 
   const handleAddressChange = (selectedItem) => {
     setSelectedAddress(selectedItem);
@@ -51,22 +62,28 @@ const OrderSummaryScreen = ({ route }) => {
         <Text style={styles.summaryText}>Bütçe: ₺{budget}</Text>
         <Text style={styles.summaryText}>Not: {note}</Text>
 
-        <Text style={styles.dropdownLabel}>Adres Seçin:</Text>
-        {addresses.length > 0 ? (
-          <SelectDropdown
-            data={addresses.map((address) => address.label)}
-            onSelect={(selectedItem) => handleAddressChange(selectedItem)}
-            buttonTextAfterSelection={(selectedItem) => selectedItem || 'Adres Seçiniz'}
-            rowTextForSelection={(item) => item}
-            buttonStyle={styles.dropdownButton}
-            buttonTextStyle={styles.dropdownButtonText}
-            dropdownStyle={styles.dropdown}
-            defaultButtonText="Adres Seçiniz"
-          />
-        ) : (
-          <Text style={styles.noAddressText}>Adres ekleyiniz</Text>
-        )}
-
+-       <View style={styles.dropdownContainer}>
+            <Dropdown
+                style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                iconStyle={styles.iconStyle}
+                data={addresses} 
+                maxHeight={300}
+                labelField="label" 
+                valueField="id" 
+                placeholder={!isFocus ? 'Adres Seçiniz' : '...'}
+                searchPlaceholder="Arama yapın..."
+                value={selectedAddress} 
+                onFocus={() => setIsFocus(true)}
+                onBlur={() => setIsFocus(false)}
+                onChange={item => {
+                    setSelectedAddress(item.id);
+                    setIsFocus(false);
+                }}
+                />
+        </View>
+        
         <View style={styles.checkboxContainer}>
           <CheckBox
             isChecked={isChecked}
@@ -77,9 +94,13 @@ const OrderSummaryScreen = ({ route }) => {
         </View>
       </View>
 
-      <TouchableOpacity style={styles.orderButton} onPress={handleOrderCreation}>
+      <TouchableOpacity
+        style={[styles.orderButton, isOrderButtonDisabled && styles.orderButtonDisabled]}
+        onPress={handleOrderCreation}
+        disabled={isOrderButtonDisabled}
+        >
         <Text style={styles.orderButtonText}>Sipariş Oluştur</Text>
-      </TouchableOpacity>
+    </TouchableOpacity>
     </View>
   );
 };
@@ -98,6 +119,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    marginTop: 10
   },
   summaryContainer: {
     backgroundColor: '#f5f5f5',
@@ -107,31 +129,60 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'relative',
   },
+  dropdownContainer: {
+    backgroundColor: 'white',
+    paddingVertical: 5,
+  },
+  dropdown: {
+    height: 50,
+    borderColor: 'gray',
+    borderWidth: 0.5,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+  },
+  orderButtonDisabled: {
+    backgroundColor: '#cccccc',
+  },  
   summaryText: {
     fontSize: 18,
     marginBottom: 10,
   },
-  dropdownLabel: {
-    fontSize: 16,
-    marginBottom: 5,
-  },
-  dropdownButton: {
-    width: '100%',
-    height: 50,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  dropdownButtonText: {
-    fontSize: 16,
-    color: '#333',
+  dropdownContainer: {
+    backgroundColor: 'white',
+    marginLeft: -2
   },
   dropdown: {
+    height: 50,
+    borderColor: 'gray',
+    borderWidth: 0.5,
     borderRadius: 8,
+    paddingHorizontal: 8,
+  },
+  icon: {
+    marginRight: 5,
+  },
+  label: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    left: 22,
+    top: 8,
+    zIndex: 999,
+    paddingHorizontal: 8,
+    fontSize: 14,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
   },
   noAddressText: {
     fontSize: 16,

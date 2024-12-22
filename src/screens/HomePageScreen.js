@@ -97,29 +97,11 @@ const HomePageScreen = ( {navigation}) => {
                 />
             </ScrollView>
         </View>
-        <ScrollView
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            style={styles.carouselContainer}>
-            {comments.map((item) => (
-                <View key={item.id} style={[styles.userComments, { width}]}>
-                <Text style={styles.userCommentsTitleText}>Öne Çıkan Kullanıcı Yorumları</Text>
-                <View style={styles.userImageAndCommentContainer}>
-                    <Image source={require('@/assets/images/anonymous-person.png')} style={styles.anonymousPersonLogo} />
-                    <View style={styles.commentTextContainer}>
-                    <Text style={styles.userCommentText}>"{item.comment}"</Text>
-                    <Text style={styles.userNameText}> {item.userName} - {item.location}</Text>
-                    </View>
-                </View>
-                </View>
-            ))}
-         </ScrollView>
         <View style={styles.optionsAndMenusContainer}>
             <View style={styles.giftToSomebodyContainer}>
                 <TouchableOpacity 
                 style={styles.optionBox}
-                onPress={() => navigation.navigate('MakeSurpriseForYourLovedScreen')}>
+                onPress={() => navigation.navigate('MakeSurpriseForYourLovedScreen', {userRelativeType: false})}>
                 <Image
                 source={require('@/assets/images/gift-to-sb.gif')} 
                 style={styles.giftToSomebodyLogo}
@@ -131,7 +113,7 @@ const HomePageScreen = ( {navigation}) => {
             style={styles.gifYourselfContainer}
             >
                 <TouchableOpacity style={styles.optionBox}
-                onPress={() => navigation.navigate('SurveyScreen')}
+                onPress={() => navigation.navigate('MakeSurpriseForYourself', {userRelativeType: true})}
                 >
                 <Image
                     source={require('@/assets/images/gift-yourself.gif')} 
@@ -197,7 +179,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#eedaf0',
   },
   scrollableContainer: {
-    // backgroundColor: '#e0f7fa',
     marginTop: 100
   },
   redDot: {
@@ -205,7 +186,7 @@ const styles = StyleSheet.create({
     height: 8,
     backgroundColor: 'red',
     borderRadius: 4,
-    marginTop: 4, // İkonun hemen altına kırmızı noktayı ekler
+    marginTop: 4,
   },
   commentTextContainer: {
     flex: 1,
@@ -300,7 +281,7 @@ const styles = StyleSheet.create({
   optionsAndMenusContainer: {
     flexDirection: 'column',
     justifyContent: 'center',
-    marginTop: 16,
+    marginTop: 40,
   },
   optionBox: {
     flex: 1,
@@ -340,8 +321,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingVertical: 8,
-    // backgroundColor: '#bd88ae',
-    marginTop: 15,
+    marginTop: 86,
     borderTopWidth: 1,
     borderColor: '#8A2BE2'
   },

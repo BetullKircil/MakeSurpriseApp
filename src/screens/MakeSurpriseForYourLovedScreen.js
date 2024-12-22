@@ -1,51 +1,66 @@
 import { StyleSheet, Text, View, Alert, FlatList, TouchableOpacity, Button } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {ipConfig} from "../../scripts/enums"
 
-const MakeSurpriseForYourLovedScreen = () => {
-  const [data, setData] = useState([]);
-  const navigation = useNavigation(); 
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('https://api.example.com/users');
-        const json = await response.json();
-        setData(json);
-      } catch (error) {
-        console.error('Veri çekilirken hata oluştu:', error);
-      }
-    };
+const MakeSurpriseForYourLovedScreen = ({route}) => {
+const { userRelativeType} = route.params;
+const [data, setData] = useState([]);
+const [userRelativeProfile, setUserProfile] = useState([]);
+const navigation = useNavigation(); 
 
-    fetchData();
-  }, []);
+const getData = async (key) => {
+  try {
+    const value = await AsyncStorage.getItem(key);
+    return value;
+  } catch (error) {
+    console.error("Hata oluştu:", error);
+  }
+}
+useEffect( () => {
+  getAllProfiles();
+},
+  [])
+async function deleteEvent(id){
+  
+};
+async function getAllProfiles(){
+  const UserId = Number(await getData("userID"));
+  const response = await fetch(`${ipConfig}Profile/GetAllProfiles?UserId=${UserId}&UserRelativeType=${userRelativeType}`)
+  const data = await response.json();
+  console.log("data: ", data["$values"])
+  setUserProfile(data["$values"]);
+}
 
-  const handleUserPress = (item) => {
-    navigation.navigate('CustomizeYourSurprise', { user: item }); 
-  };
-
-  const handleAddUser = () => {
-    navigation.navigate('AddUserRelative'); 
+  const handleUserPress = (userRelativeId) => {
+    navigation.navigate('UserCustomizeSurpriseScreen', { user: userRelativeId }); 
   };
 
   const renderItem = ({ item }) => {
-    const initials = `${item.firstName[0]}${item.lastName[0]}`;
+    const initials = `${item.firstName[0].toUpperCase()}${item.lastName[0].toUpperCase()}`;
     return (
-      <TouchableOpacity style={styles.itemContainer} onPress={() => handleUserPress(item)}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{initials}</Text>
-        </View>
-        <Text style={styles.nameText}>{`${item.firstName} ${item.lastName}`}</Text>
-      </TouchableOpacity>
+      <View style={styles.rowContainer}>
+        <TouchableOpacity style={styles.itemContainer} onPress={() => handleUserPress(item.userRelativeId)}>
+          <View style={styles.avatar}>
+            <Text style={styles.avatarText}>{initials}</Text>
+          </View>
+          <Text numberOfLines={1} ellipsizeMode="tail" style={styles.nameText}>{`${item.firstName} ${item.lastName}`}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => deleteEvent()} style={styles.deleteButton}>
+          <Text style={styles.deleteButtonText}>Sil</Text>
+        </TouchableOpacity>
+    </View>
     );
   };
 
   return (
     <View style={styles.container}>
-      {data.length === 0 ? ( 
+      {userRelativeProfile.length === 0 ? ( 
         <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>Hiç kullanıcı bulunamadı!</Text>
-          <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddUserRelative')}>
+          <Text style={styles.emptyText}>Kaydedilmiş kullanıcı profili bulunamadı!</Text>
+          <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddUserRelative', {userRelativeType: userRelativeType})}>
             <Text style={styles.addButtonText}>+</Text>
           </TouchableOpacity>
         </View>
@@ -53,11 +68,14 @@ const MakeSurpriseForYourLovedScreen = () => {
         <>
           <Text style={styles.title}>Kayıtlı Sevdiklerin</Text>
           <FlatList
-            data={data}
-            keyExtractor={(item) => item.id.toString()}
+            data={userRelativeProfile}
+            keyExtractor={(item) => item.id}
             renderItem={renderItem}
             contentContainerStyle={styles.listContainer}
-          />
+          /> 
+          <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddUserRelative', {userRelativeType: userRelativeType})}>
+            <Text style={styles.addButtonText}>+</Text>
+          </TouchableOpacity>
         </>
       )}
     </View>
@@ -74,6 +92,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 16,
   },
+  rowContainer: {
+    flexDirection: 'row',
+    alignItems: 'center', 
+    justifyContent: 'space-between', 
+    padding: 10,
+  },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
@@ -87,10 +111,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  deleteButton: {
+    backgroundColor: "red",
+    paddingVertical: 24,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginLeft: 20
+  },
   emptyText: {
     fontSize: 20,
     color: '#555',
     marginBottom: 20,
+  },
+  deleteButtonText: {
+    color: "white",
+    fontWeight: "bold",
   },
   addButton: {
     width: 60,
@@ -114,6 +149,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderRadius: 8,
     elevation: 2,
+    width: 220
   },
   avatar: {
     width: 50,
@@ -132,5 +168,8 @@ const styles = StyleSheet.create({
   nameText: {
     fontSize: 16,
     color: '#333',
+    width: 200,
+    overflow: 'hidden',
+    textAlign: 'left',
   },
 });

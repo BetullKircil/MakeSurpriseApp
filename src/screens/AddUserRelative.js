@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, Modal } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const AddUserRelative = ({ navigation }) => {
+const AddUserRelative = ( {navigation, route}) => {
+    const { userRelativeType} = route.params;
     const tags = ["Aile", "Sevgili", "Arkadaş", "Özel Gün", "Diğer"];
     const [selectedTags, setSelectedTags] = useState([]);
     const [showCustomTagInput, setShowCustomTagInput] = useState(false);
@@ -30,30 +32,30 @@ const AddUserRelative = ({ navigation }) => {
 
     const isButtonDisabled = !firstName.trim() || !lastName.trim() || !phone.trim() || selectedTags.length === 0;
 
+    const getData = async (key) => {
+        try {
+          const value = await AsyncStorage.getItem(key);
+          return value;
+        } catch (error) {
+          console.error("Hata oluştu:", error);
+        }
+      }
+
     const handleSubmit = async () => {
         setIsLoading(true);
-
+        const userId = await getData("userID");
+        console.log("userId:", userId) 
         const payload = {
-            firstName: firstName.trim(),
-            lastName: lastName.trim(),
-            phone: phone.trim(),
-            tag: selectedTags.join(', '),
+            FirstName: firstName.trim(),
+            LastName: lastName.trim(),
+            PhoneNumber: phone.trim(),
+            Tag: selectedTags.join(', '),
+            UserRelativeType: userRelativeType,
+            userId: await getData("userID")
         };
 
         try {
-            const response = await fetch('https://your-backend-api.com/users', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload),
-            });
-
-            if (response.ok) {
-                navigation.navigate('SurveyScreen');
-            } else {
-                console.error('Backend hata:', await response.json());
-            }
+            navigation.navigate("SurveyScreen", {ProfileInfo: payload});
         } catch (error) {
             console.error('İstek gönderme hatası:', error);
         } finally {
@@ -63,7 +65,7 @@ const AddUserRelative = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Yeni Kullanıcı Ekle</Text>
+            <Text style={styles.title}>Yeni Profil Ekle</Text>
             <TextInput
                 placeholder="Ad"
                 style={styles.input}

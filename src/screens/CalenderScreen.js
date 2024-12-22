@@ -3,29 +3,40 @@ import { StyleSheet, Text, View, Modal, TextInput, Button, FlatList, TouchableOp
 import CalendarPicker from "react-native-calendar-picker";
 import BottomBarNavigation from "../components/BottomBarNavigation";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {ipConfig} from "../../scripts/enums"
+
 
 const CalenderScreen = ({ navigation }) => {
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [eventTitle, setEventTitle] = useState("");
   const [events, setEvents] = useState([]);
+  const [selectedMenu, setSelectedMenu] = useState('calendar');
 
   async function getAllDates(){
     const UserId = Number(await getData("userID"));
-    const response = await fetch(`http://192.168.1.129:5159/SpecialDayCalendar/GetAllSpecialDays?userId=${UserId}`)
+    console.log("UserId: ", UserId)
+    const response = await fetch(`${ipConfig}SpecialDayCalendar/GetAllSpecialDays?userId=${UserId}`)
     const data = await response.json();
+    console.log("data: ", data)
     const specialDate = data["$values"]
+    console.log("calender data: ", data["$values"])
     const specialDateArray = [];
     specialDate.forEach(specialDay => {
       specialDateArray.push({id: specialDay.specialDayId, title: specialDay.title, date: new Date(specialDay.specialDayDate + "Z")})
     });
     setEvents(specialDateArray);
   }
-  
+
+  const handleNavigation = (menu) => {
+    setSelectedMenu(menu); 
+    navigation.navigate(menu);
+  };
   useEffect(
     () => {
       getAllDates();
-    }
+    },
+    []
   )
 
   const getData = async (key) => {
@@ -126,7 +137,7 @@ const CalenderScreen = ({ navigation }) => {
         />
       </View>
 
-      <BottomBarNavigation navigation={navigation}/>
+      <BottomBarNavigation selectedMenu={selectedMenu} navigation={navigation} onNavigate={handleNavigation}/>
     </View>
   );
 };
@@ -190,7 +201,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 20,
     paddingHorizontal: 20,
-    paddingBottom: 80, // Avoids overlap with BottomBarNavigation
+    paddingBottom: 80,
   },
   eventsTitle: {
     fontSize: 16,

@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import Loading from "../../src/components/Loading"
 import { Image, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
 import CheckBox from 'react-native-check-box'
+import {ipConfig} from "../../scripts/enums"
 
 const SignupScreen = ({navigation}) => {
   const [password, setPassword] = useState('');
@@ -50,7 +51,7 @@ const SignupScreen = ({navigation}) => {
   
     try {
       // Fetch isteği
-      const response = await fetch("http://192.168.1.129:5159/Auth/Register", {
+      const response = await fetch(`${ipConfig}Auth/Register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
