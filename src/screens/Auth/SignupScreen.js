@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
-import Loading from "../../src/components/Loading"
+import Loading from "../../components/common/Loading"
 import { Image, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
 import CheckBox from 'react-native-check-box'
-import {ipConfig} from "../../scripts/enums"
+import {ipConfig} from "../../../scripts/enums"
 
 const SignupScreen = ({navigation}) => {
   const [password, setPassword] = useState('');
@@ -39,7 +39,6 @@ const SignupScreen = ({navigation}) => {
   };
 
   async function signupHandle() {
-    // Giriş verilerini oluşturuyoruz
     const requestData = {
       FirstName: firstName,
       LastName: lastName,
@@ -50,7 +49,6 @@ const SignupScreen = ({navigation}) => {
     console.log("Request Data:", requestData);
   
     try {
-      // Fetch isteği
       const response = await fetch(`${ipConfig}Auth/Register`, {
         method: "POST",
         headers: {
@@ -58,20 +56,12 @@ const SignupScreen = ({navigation}) => {
         },
         body: JSON.stringify(requestData),
       });
-  
-      // HTTP yanıt durumunu kontrol ediyoruz
-      if (!response.ok) {
+        if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-  
-      // Yanıtı JSON formatında alıyoruz
-      const responseData = await response.json();
+        const responseData = await response.json();
       console.log("Response Data:", responseData);
-  
-      // Başarılı yanıt durumunda bir işlem yapılabilir
-      // Örneğin, kullanıcıyı başka bir sayfaya yönlendirme
     } catch (error) {
-      // Hata durumunu ele alıyoruz
       console.error("Error during signup request:", error);
     }
   }

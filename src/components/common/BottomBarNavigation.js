@@ -9,8 +9,7 @@ const BottomBarNavigation = ({selectedMenu, navigation}) => {
                     onPress={() => navigation.navigate('HomePageScreen')}>
                     <Image
                     source={require('@/assets/images/home.png')}
-                    style={styles.homeNavBarLogo}
-                    />
+                    style={styles.homeNavBarLogo}/>
                     {selectedMenu === 'home' && <View style={styles.redDot} />}
                 </TouchableOpacity>
                 
@@ -57,7 +56,6 @@ const styles = StyleSheet.create({
         width: '100%',
         justifyContent: 'space-around',
         paddingVertical: 8,
-        // backgroundColor: '#bd88ae',
         marginTop: 15,
         borderTopWidth: 1,
         borderColor: '#8A2BE2'
@@ -75,7 +73,7 @@ const styles = StyleSheet.create({
         height: 8,
         backgroundColor: 'red',
         borderRadius: 4,
-        marginTop: 4, // İkonun hemen altına kırmızı noktayı ekler
+        marginTop: 4, 
       },
       homeNavBarLogoForProfile: {
         width: 35,

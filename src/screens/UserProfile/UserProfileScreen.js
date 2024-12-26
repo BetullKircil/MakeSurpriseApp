@@ -1,93 +1,68 @@
 import React, {useState} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Modal } from 'react-native';
-import BottomBarNavigation from "../components/BottomBarNavigation";
+import BottomBarNavigation from "../../components/common/BottomBarNavigation";
 import userInfoIcon from '@/assets/images/userInfo.png';
 import locationNotebookIcon from '@/assets/images/locationNotebook.png';
 import cargoTraceIcon from '@/assets/images/cargoTrace.png';
 import passwordIcon from '@/assets/images/password.png';
 import announceIcon from '@/assets/images/announce.png';
+import MenuItem from '../../components/UserProfile/MenuItem';
+import LogoutModal from '../../components/UserProfile/LogoutModal';
+import logoutIcon from '@/assets/images/logout.png';
 
-const UserProfileScreen = ({navigation}) => {
-  const [logoutModalVisible, setLogoutModalVisible] = useState(false); 
+
+const UserProfileScreen = ({ navigation }) => {
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState('profile');
 
+  const menuItems = [
+    { label: 'Kullanıcı Bilgilerim', icon: userInfoIcon, screen: 'UserProfileInfoScreen' },
+    { label: 'Adres Defterim', icon: locationNotebookIcon, screen: 'UserAddressInfoScreen' },
+    { label: 'Kargo Takibi', icon: cargoTraceIcon, screen: 'CargoTrackingScreen' },
+    { label: 'Şifre Değişikliği', icon: passwordIcon, screen: 'PasswordChangeScreen' },
+    { label: 'Duyuru Tercihlerim', icon: announceIcon, screen: 'AnnouncementPreferencesScreen' },
+  ];
+
   const handleMenuActivity = (menu) => {
-    setSelectedMenu(menu); 
+    setSelectedMenu(menu);
     navigation.navigate(menu);
   };
-      const menuItems = [
-        { label: 'Kullanıcı Bilgilerim', icon: userInfoIcon, screen: 'UserProfileInfoScreen'},
-        { label: 'Adres Defterim', icon: locationNotebookIcon, screen: 'UserAddressInfoScreen'},
-        { label: 'Kargo Takibi', icon: cargoTraceIcon, screen: 'CargoTrackingScreen'},
-        { label: 'Şifre Değişikliği', icon: passwordIcon, screen: 'PasswordChangeScreen'},
-        { label: 'Duyuru Tercihlerim', icon: announceIcon, screen: 'AnnouncementPreferencesScreen'},
-      ];
-      const handleLogout = () => {
-        console.log("Çıkış yapılmadı.");
-        setLogoutModalVisible(true); 
-      };
-      const closeLogoutPopup = () => {
-        console.log("Çıkış yapıldı.");
-        setLogoutModalVisible(false); 
-      };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={styles.walletContainer}>
-          <Image
-            source={require('@/assets/images/wallet.png')} 
-            style={styles.icon}
-          />
-        </View>
+        <Image source={require('@/assets/images/wallet.png')} style={styles.icon} />
       </View>
 
       <View style={styles.menuContainer}>
         {menuItems.map((item, index) => (
-          <TouchableOpacity key={index}
-           style={styles.menuItem}
-           onPress={() => navigation.navigate(item.screen)}>
-            <Image source={item.icon} style={styles.menuIcon} />
-            <Text style={styles.menuText}>{item.label + " >"}</Text>
-          </TouchableOpacity>
+          <MenuItem
+            key={index}
+            label={`${item.label} >`}
+            icon={item.icon}
+            onPress={() => navigation.navigate(item.screen)}
+          />
         ))}
+        <MenuItem
+          label="Logout"
+          icon={logoutIcon}
+          onPress={() => setLogoutModalVisible(true)}
+        />
       </View>
-      <View style={styles.menuContainer}>
-          <TouchableOpacity
-           style={styles.menuItem}
-           onPress={handleLogout}>
-            <Image source={require('@/assets/images/logout.png')} style={styles.menuIcon} />
-            <Text style={styles.menuText}>Logout</Text>
-          </TouchableOpacity>
-      </View>
-      <Modal
-        transparent={true}
+
+      <LogoutModal
         visible={logoutModalVisible}
-        animationType="fade"
-        onRequestClose={() => setLogoutModalVisible(false)}>
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Çıkış Yap</Text>
-            <Text style={styles.modalMessage}>Hesabınızdan çıkış yapmak istediğinizden emin misiniz?</Text>
-            <View style={styles.modalButtons}>
-              <TouchableOpacity
-                style={styles.modalButton}
-                onPress={() => setLogoutModalVisible(false)}>
-                <Text style={styles.modalButtonText}>Hayır</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.modalButton, styles.confirmButton]}
-                onPress={closeLogoutPopup}>
-                <Text style={styles.modalButtonText}>Evet</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
-      <BottomBarNavigation selectedMenu={selectedMenu} navigation={navigation} onNavigate={handleMenuActivity}/>
+        onCancel={() => setLogoutModalVisible(false)}
+        onConfirm={() => {
+          setLogoutModalVisible(false);
+          console.log("Çıkış yapıldı.");
+        }}
+      />
+
+      <BottomBarNavigation selectedMenu={selectedMenu} navigation={navigation} onNavigate={handleMenuActivity} />
     </View>
-    
   );
-}
+};
 
 export default UserProfileScreen;
 

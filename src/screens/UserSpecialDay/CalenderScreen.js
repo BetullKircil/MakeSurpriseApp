@@ -1,9 +1,11 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { StyleSheet, Text, View, Modal, TextInput, Button, FlatList, TouchableOpacity } from "react-native";
 import CalendarPicker from "react-native-calendar-picker";
-import BottomBarNavigation from "../components/BottomBarNavigation";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {ipConfig} from "../../scripts/enums"
+import BottomBarNavigation from "../../components/common/BottomBarNavigation";
+import useAsyncStorage from '../../helper/useAsyncStorage';
+import CalenderEventModal from '../../components/Calender/CalenderEventModal';
+import CalenderEventList from '../../components/Calender/CalenderEventList';
+import {ipConfig} from "../../../scripts/enums"
 
 
 const CalenderScreen = ({ navigation }) => {
@@ -15,12 +17,9 @@ const CalenderScreen = ({ navigation }) => {
 
   async function getAllDates(){
     const UserId = Number(await getData("userID"));
-    console.log("UserId: ", UserId)
     const response = await fetch(`${ipConfig}SpecialDayCalendar/GetAllSpecialDays?userId=${UserId}`)
     const data = await response.json();
-    console.log("data: ", data)
     const specialDate = data["$values"]
-    console.log("calender data: ", data["$values"])
     const specialDateArray = [];
     specialDate.forEach(specialDay => {
       specialDateArray.push({id: specialDay.specialDayId, title: specialDay.title, date: new Date(specialDay.specialDayDate + "Z")})
@@ -39,14 +38,8 @@ const CalenderScreen = ({ navigation }) => {
     []
   )
 
-  const getData = async (key) => {
-    try {
-      const value = await AsyncStorage.getItem(key);
-      return value;
-    } catch (error) {
-      console.error("Hata oluştu:", error);
-    }
-  }
+  const { getData } = useAsyncStorage();
+
   const onDateChange = useCallback((date) => {
     setSelectedStartDate(date);
     setIsModalVisible(true); 
@@ -58,7 +51,7 @@ const CalenderScreen = ({ navigation }) => {
   async function saveEvent(){
     if (selectedStartDate && eventTitle) {
       const UserId = Number(await getData("userID"));
-      const response = await fetch("http://192.168.1.129:5159/SpecialDayCalendar/AddSpecialDay", 
+      const response = await fetch(`${ipConfig}SpecialDayCalendar/AddSpecialDay`, 
         {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
@@ -78,7 +71,7 @@ const CalenderScreen = ({ navigation }) => {
   };
 
   async function deleteEvent(id){
-    const response = await fetch(`http://192.168.1.129:5159/SpecialDayCalendar/DeleteSpecialDay?specialDayId=${id}` , 
+    const response = await fetch(`${ipConfig}SpecialDayCalendar/DeleteSpecialDay?specialDayId=${id}` , 
         {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
@@ -96,47 +89,14 @@ const CalenderScreen = ({ navigation }) => {
         <Text style={styles.calenderText}>Seçilen Gün: </Text>
         <Text style={styles.dateText}>{selectedSpecialDate}</Text>
       </View>
-
-      <Modal
-        transparent={true}
-        visible={isModalVisible}
-        onRequestClose={() => setIsModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Özel Gün Ekleyin</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Başlık girin"
-              value={eventTitle}
-              onChangeText={setEventTitle}
-            />
-            <View style={styles.popupButtons}>
-            <Button title="Kaydet" onPress={saveEvent}/>
-            <View style={styles.gap}></View>
-            <Button title="İptal" onPress={() => setIsModalVisible(false)} color="red"/>
-            </View>
-          </View>
-        </View>
-      </Modal>
-
-      <View style={styles.eventsList}>
-        <Text style={styles.eventsTitle}>Kaydedilen Günler:</Text>
-        <FlatList
-          data={events}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.eventItem}>
-              <Text style={styles.eventDate}>{item.date.getDate()}/{item.date.getMonth() + 1}/{item.date.getFullYear()}</Text>
-              <Text style={styles.eventTitle}>{item.title}</Text>
-              <TouchableOpacity onPress={() => deleteEvent(item.id)} style={styles.deleteButton}>
-                <Text style={styles.deleteButtonText}>Sil</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        />
-      </View>
-
+      <CalenderEventModal
+        isVisible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        onSave={saveEvent}
+        eventTitle={eventTitle}
+        setEventTitle={setEventTitle}
+      />
+      <CalenderEventList events={events} onDelete={deleteEvent} />
       <BottomBarNavigation selectedMenu={selectedMenu} navigation={navigation} onNavigate={handleNavigation}/>
     </View>
   );

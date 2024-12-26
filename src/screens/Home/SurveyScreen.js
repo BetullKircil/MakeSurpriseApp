@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import {ipConfig} from "../../scripts/enums"
+import {ipConfig} from "../../../scripts/enums"
 
 const SurveyScreen = ({ navigation, route }) => {
   const {ProfileInfo} = route.params;

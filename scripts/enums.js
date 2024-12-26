@@ -1,1 +1,13 @@
 export const ipConfig = "http://192.168.1.129:5159/"
+export const homePageSurpriseForLovedOnes = "Sevdiklerine Sürpriz Yap"
+export const homePageSurpriseForYourself = "Kendine Sürpriz Yap"
+export const appNameFirstPart = "Make"
+export const appNameSecondPart = "Surprise"
+export const budget = "Bütçe"
+export const orderSummary = "Sipariş Özeti"
+export const note = "Not"
+export const createOrder = "Sipariş Oluştur"
+export const addAddress = "+ Adres Ekle"
+export const selectAddress = "Adres Seçiniz"
+export const selectedDay = "Seçilen Gün: "
+

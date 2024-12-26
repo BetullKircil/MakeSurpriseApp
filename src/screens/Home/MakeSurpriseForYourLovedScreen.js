@@ -1,8 +1,9 @@
-import { StyleSheet, Text, View, Alert, FlatList, TouchableOpacity, Button } from 'react-native';
+import { StyleSheet, Text, View, Alert, FlatList, TouchableOpacity, Image } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {ipConfig} from "../../scripts/enums"
+import { ActivityIndicator } from 'react-native';
+import useAsyncStorage from '../../helper/useAsyncStorage';
+import {ipConfig} from "../../../scripts/enums"
 
 
 const MakeSurpriseForYourLovedScreen = ({route}) => {
@@ -10,28 +11,40 @@ const { userRelativeType} = route.params;
 const [data, setData] = useState([]);
 const [userRelativeProfile, setUserProfile] = useState([]);
 const navigation = useNavigation(); 
+const [loading, setLoading] = useState(true);
 
-const getData = async (key) => {
-  try {
-    const value = await AsyncStorage.getItem(key);
-    return value;
-  } catch (error) {
-    console.error("Hata oluştu:", error);
-  }
-}
+const { getData } = useAsyncStorage();
+
 useEffect( () => {
+  console.log("heloooo")
   getAllProfiles();
 },
   [])
+
 async function deleteEvent(id){
-  
+  const response = await fetch(`${ipConfig}Profile/DeleteProfile?userRelativeId=${id}` , 
+      {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+      }
+  )
+  if(response.ok){
+    await getAllProfiles();
+  }
 };
 async function getAllProfiles(){
-  const UserId = Number(await getData("userID"));
-  const response = await fetch(`${ipConfig}Profile/GetAllProfiles?UserId=${UserId}&UserRelativeType=${userRelativeType}`)
-  const data = await response.json();
-  console.log("data: ", data["$values"])
-  setUserProfile(data["$values"]);
+  setLoading(true);
+  try{
+    const UserId = Number(await getData("userID"));
+    const response = await fetch(`${ipConfig}Profile/GetAllProfiles?UserId=${UserId}&UserRelativeType=${userRelativeType}`)
+    const data = await response.json();
+    setUserProfile(data["$values"] || []);
+  }catch (error) {
+    console.error("Veri yüklenirken hata oluştu:", error);
+  } 
+  finally {
+    setLoading(false); 
+  }
 }
 
   const handleUserPress = (userRelativeId) => {
@@ -39,32 +52,41 @@ async function getAllProfiles(){
   };
 
   const renderItem = ({ item }) => {
-    const initials = `${item.firstName[0].toUpperCase()}${item.lastName[0].toUpperCase()}`;
+    const initials = `${item.firstName[0]}${item.lastName[0]}`;
     return (
       <View style={styles.rowContainer}>
         <TouchableOpacity style={styles.itemContainer} onPress={() => handleUserPress(item.userRelativeId)}>
           <View style={styles.avatar}>
             <Text style={styles.avatarText}>{initials}</Text>
           </View>
-          <Text numberOfLines={1} ellipsizeMode="tail" style={styles.nameText}>{`${item.firstName} ${item.lastName}`}</Text>
+          <View style={styles.itemStyle}>
+            <Text style={styles.nameText}>{`${item.firstName} ${item.lastName}`}</Text>
+            <Text style={styles.nameText}>{`(${item.tag})`}</Text>
+          </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => deleteEvent()} style={styles.deleteButton}>
-          <Text style={styles.deleteButtonText}>Sil</Text>
+        <TouchableOpacity onPress={() => deleteEvent(item.userRelativeId)} style={styles.deleteButtonStyle} >
+        <Image
+              source={require('@/assets/images/delete-icon.png')}
+              style={styles.deleteIconLogo}/>
         </TouchableOpacity>
-    </View>
+      </View>
     );
   };
 
   return (
     <View style={styles.container}>
-      {userRelativeProfile.length === 0 ? ( 
+      {loading ? (
+        <View style={styles.spinnerContainer}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      ) : userRelativeProfile.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>Kaydedilmiş kullanıcı profili bulunamadı!</Text>
           <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddUserRelative', {userRelativeType: userRelativeType})}>
             <Text style={styles.addButtonText}>+</Text>
           </TouchableOpacity>
         </View>
-      ) : ( 
+      ) : (
         <>
           <Text style={styles.title}>Kayıtlı Sevdiklerin</Text>
           <FlatList
@@ -72,7 +94,7 @@ async function getAllProfiles(){
             keyExtractor={(item) => item.id}
             renderItem={renderItem}
             contentContainerStyle={styles.listContainer}
-          /> 
+          />
           <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddUserRelative', {userRelativeType: userRelativeType})}>
             <Text style={styles.addButtonText}>+</Text>
           </TouchableOpacity>
@@ -106,16 +128,29 @@ const styles = StyleSheet.create({
     marginTop: 30,
     color: '#8A2BE2',
   },
+  deleteIconLogo: {
+    width: 30,
+    height: 30,
+    marginHorizontal: 5,
+  },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  itemStyle: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   deleteButton: {
     backgroundColor: "red",
     paddingVertical: 24,
     paddingHorizontal: 20,
     borderRadius: 5,
+    marginLeft: 20
+  },
+  deleteButtonStyle: {
     marginLeft: 20
   },
   emptyText: {
@@ -135,6 +170,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 5,
+    marginBottom: 50
   },
   addButtonText: {
     color: '#fff',
@@ -155,7 +191,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#4caf50',
+    backgroundColor: '#b2b8c2',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 15,
@@ -168,8 +204,11 @@ const styles = StyleSheet.create({
   nameText: {
     fontSize: 16,
     color: '#333',
-    width: 200,
-    overflow: 'hidden',
-    textAlign: 'left',
   },
+  spinnerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  
 });

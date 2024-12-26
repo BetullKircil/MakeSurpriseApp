@@ -10,7 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform 
 } from 'react-native';
-import BottomBarNavigation from "../components/BottomBarNavigation";
+import BottomBarNavigation from "../../components/common/BottomBarNavigation";
 
 const UserCustomizeSurpriseScreen = ({ navigation }) => {
   const [budget, setBudget] = useState('');

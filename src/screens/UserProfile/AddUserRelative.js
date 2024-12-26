@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, Modal } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import useAsyncStorage from '../../helper/useAsyncStorage';
+import TagSelector from '../../components/Order/TagSelector';
+import CustomTagSelectionModal from '../../components/Order/CustomTagSelectionModal';
+
 
 const AddUserRelative = ( {navigation, route}) => {
     const { userRelativeType} = route.params;
@@ -8,6 +11,10 @@ const AddUserRelative = ( {navigation, route}) => {
     const [selectedTags, setSelectedTags] = useState([]);
     const [showCustomTagInput, setShowCustomTagInput] = useState(false);
     const [customTag, setCustomTag] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const toggleTag = (tag) => {
         if (selectedTags.includes(tag)) {
@@ -16,6 +23,7 @@ const AddUserRelative = ( {navigation, route}) => {
             setSelectedTags(prevSelectedTags => [...prevSelectedTags, tag]);
         }
     };
+    const { getData } = useAsyncStorage();
 
     const addCustomTag = () => {
         if (customTag.trim() && !selectedTags.includes(customTag)) {
@@ -25,21 +33,7 @@ const AddUserRelative = ( {navigation, route}) => {
         setCustomTag('');
     };
 
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [phone, setPhone] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-
     const isButtonDisabled = !firstName.trim() || !lastName.trim() || !phone.trim() || selectedTags.length === 0;
-
-    const getData = async (key) => {
-        try {
-          const value = await AsyncStorage.getItem(key);
-          return value;
-        } catch (error) {
-          console.error("Hata oluştu:", error);
-        }
-      }
 
     const handleSubmit = async () => {
         setIsLoading(true);
@@ -85,63 +79,20 @@ const AddUserRelative = ( {navigation, route}) => {
                 value={phone}
                 onChangeText={setPhone}
             />
-            <View style={styles.tagsContainer}>
-                {tags.map((tag) => (
-                    tag === "Diğer" ? (
-                        <TouchableOpacity
-                            key={tag}
-                            onPress={() => setShowCustomTagInput(true)}
-                            style={[styles.tag, selectedTags.includes(tag) && styles.selectedTag]}
-                        >
-                            <Text style={styles.tagText}>{tag}</Text>
-                        </TouchableOpacity>
-                    ) : (
-                        <TouchableOpacity
-                            key={tag}
-                            onPress={() => toggleTag(tag)}
-                            style={[styles.tag, selectedTags.includes(tag) && styles.selectedTag]}
-                        >
-                            <Text style={styles.tagText}>{tag}</Text>
-                        </TouchableOpacity>
-                    )
-                ))}
-                {selectedTags.filter(tag => tag !== "Diğer").map((tag, index) => (
-                    <View key={index} style={[styles.tag, styles.selectedTag]}>
-                        <Text style={styles.tagText}>{tag}</Text>
-                    </View>
-                ))}
-            </View>
-            <Modal
-                animationType="slide"
-                transparent={true}
+            <TagSelector
+                tags={["Aile", "Sevgili", "Arkadaş", "Özel Gün", "Diğer"]}
+                selectedTags={selectedTags}
+                toggleTag={toggleTag}
+                showCustomTagInput={showCustomTagInput}
+                setShowCustomTagInput={setShowCustomTagInput}
+            />
+            <CustomTagSelectionModal
                 visible={showCustomTagInput}
-                onRequestClose={() => setShowCustomTagInput(false)}
-            >
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                        <Text style={styles.modalTitle}>Özel Tag Girin</Text>
-                        <TextInput
-                            placeholder="Tag Adı"
-                            style={styles.input}
-                            value={customTag}
-                            onChangeText={setCustomTag}
-                        />
-                        <TouchableOpacity
-                            style={styles.submitButton}
-                            onPress={addCustomTag}
-                        >
-                            <Text style={styles.submitButtonText}>Tag Ekle</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.cancelButton}
-                            onPress={() => setShowCustomTagInput(false)}
-                        >
-                            <Text style={styles.cancelButtonText}>İptal</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
-
+                onClose={() => setShowCustomTagInput(false)}
+                onSubmit={addCustomTag}
+                customTag={customTag}
+                setCustomTag={setCustomTag}
+            />
             <TouchableOpacity
                 style={[styles.submitButton, { opacity: isButtonDisabled ? 0.5 : 1 }]}
                 disabled={isButtonDisabled || isLoading}

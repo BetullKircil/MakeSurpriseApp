@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import Loading from "../components/Loading"
+import Loading from "../../components/common/Loading"
 import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
 const MainScreen = ( {navigation} ) => {

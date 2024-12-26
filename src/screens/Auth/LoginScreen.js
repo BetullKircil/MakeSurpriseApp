@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
-import Loading from "../../src/components/Loading"
+import Loading from "../../components/common/Loading"
 import { Image, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {ipConfig} from "../../scripts/enums"
+import {ipConfig} from "../../../scripts/enums"
+import { ActivityIndicator } from 'react-native';
 
 
 const  HomeScreen = ({navigation}) =>{
@@ -25,7 +26,7 @@ const  HomeScreen = ({navigation}) =>{
   };
 
   const isButtonDisabled = email.trim() === '' || password.trim() === '';
-  async function handleLogin(){
+  async function handleLogin() {
     setIsEmailTouched(true);
     const isEmailValid = emailRegex.test(email.trim()); 
     const isPasswordValid = password.trim() !== '';
@@ -36,78 +37,83 @@ const  HomeScreen = ({navigation}) =>{
     if (!isEmailValid || !isPasswordValid) {
       return; 
     }
+
+    setIsLoading(true);
     const requestData = {
       Email: email,
       Password: password,
     };
-    const response = await fetch(`${ipConfig}Auth/Login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestData),
-    });
-    if(response.ok){
-      const data = await response.json()
-      await storeData("userID", data.user.userId.toString())
-      setIsLoading(true);
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 4000);
-    navigation.navigate('HomePageScreen')
+
+    try {
+      const response = await fetch(`${ipConfig}Auth/Login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        await storeData("userID", data.user.userId.toString());
+        navigation.navigate('HomePageScreen');
+      } else {
+        setErrorMessage("Giriş bilgileri hatalı. Lütfen tekrar deneyin.");
+      }
+    } catch (error) {
+      console.error("Hata oluştu:", error);
+    } finally {
+      setIsLoading(false);
     }
-    else{
-      setErrorMessage("Giriş bilgileri hatalı. Lütfen tekrar deneyin.");
-    } 
   };
   return (
     <View style={styles.container}>
-    <Text style={styles.title}>Giriş</Text>
-      {isLoading && <Loading />}
-      <Image
-        source={require('@/assets/images/login-person.png')} 
-        style={styles.logo}
-      />
-      <TextInput 
-        onChangeText={(value) => setEmail(value)}
-        placeholder="E-mail" 
-        style={[styles.input, { borderColor: !isEmailValid && isEmailTouched ? 'red' : '#ddd' }]} 
-        onFocus={() => setIsEmailTouched(true)}
-        />
-      {!isEmailValid && <Text style={styles.errorText}>Geçersiz email formatı.</Text>}
-
-      <TextInput
-          placeholder="Şifre"
-          secureTextEntry={!showPassword} 
-          style={styles.input}
-          onChangeText={(value) => setPassword(value)}
-        />
-        {errorMessage !== '' && <Text style={styles.stackErrorMessageText}>{errorMessage}</Text>}
-        <View style={styles.loginWithSocialLinkContainer}>
-        <Image
-            source={require('@/assets/images/google-logo.png')}
-            style={styles.googleLogo}
-        />
-        <Text style={styles.buttonText}> ile Giriş Yap</Text>
+      {isLoading ? (
+        <View style={styles.spinnerContainer}>
+          <ActivityIndicator size="large" color="#0000ff" />
         </View>
-      <TouchableOpacity
-        style={[styles.loginButton, { opacity: email && password ? 1 : 0.5 }]}
-        onPress={handleLogin}
-        disabled={!email || !password} 
-      >
-        <Text style={styles.buttonText}>Giriş Yap</Text>
-      </TouchableOpacity>
-      <View style={styles.policyContainer}>
-        <Text style={styles.policyText}>
-          Hesabın Yok mu?
-        </Text>
-        <Text style={styles.registerText} onPress={() => navigation.navigate('Signup')}>
-          Kaydol
-        </Text>
-      </View>
+      ) : (
+        <>
+          <Text style={styles.title}>Giriş</Text>
+          <Image
+            source={require('@/assets/images/login-person.png')} 
+            style={styles.logo}
+          />
+          <TextInput 
+            onChangeText={(value) => setEmail(value)}
+            placeholder="E-mail" 
+            style={[styles.input, { borderColor: !isEmailValid && isEmailTouched ? 'red' : '#ddd' }]} 
+            onFocus={() => setIsEmailTouched(true)}
+          />
+          {!isEmailValid && <Text style={styles.errorText}>Geçersiz email formatı.</Text>}
+
+          <TextInput
+            placeholder="Şifre"
+            secureTextEntry={!showPassword} 
+            style={styles.input}
+            onChangeText={(value) => setPassword(value)}
+          />
+          {errorMessage !== '' && <Text style={styles.stackErrorMessageText}>{errorMessage}</Text>}
+          
+          <TouchableOpacity
+            style={[styles.loginButton, { opacity: email && password ? 1 : 0.5 }]}
+            onPress={handleLogin}
+            disabled={!email || !password} 
+          >
+            <Text style={styles.buttonText}>Giriş Yap</Text>
+          </TouchableOpacity>
+
+          <View style={styles.policyContainer}>
+            <Text style={styles.policyText}>Hesabın Yok mu?</Text>
+            <Text style={styles.registerText} onPress={() => navigation.navigate('Signup')}>
+              Kaydol
+            </Text>
+          </View>
+        </>
+      )}
     </View>
   );
-}
+};
 
 export default HomeScreen;
 
@@ -220,4 +226,10 @@ const styles = StyleSheet.create({
     fontSize: 28,
     color: '#fff',
   },
+  spinnerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  
 });
