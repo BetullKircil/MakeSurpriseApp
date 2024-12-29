@@ -1,38 +1,54 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Modal, Button, KeyboardAvoidingView, Platform } from 'react-native';
+import useAsyncStorage from '../../helper/useAsyncStorage';
+import {ipConfig} from "../../../scripts/enums"
 
 const PasswordChangeScreen = ({navigation}) => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [passwordAgain, setPasswordAgain] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const [isEditingFirstName, setIsEditingFirstName] = useState(false);
+  const [isEditingCurrentPassword, setIsEditingCurrentPassword] = useState(false);
   const [firstNameIcon, setFirstNameIcon] = useState(require('@/assets/images/noEdit.png'));
 
-  const [isEditingLastName, setIsEditingLastName] = useState(false);
+  const [isEditingNewPassword, setIsEditingNewPassword] = useState(false);
   const [lastNameIcon, setLastNameIcon] = useState(require('@/assets/images/noEdit.png'));
 
-  const [isEditingPhoneNumber, setIsEditingPhoneNumber] = useState(false);
+  const [isEditingPasswordAgain, setIsEditingPasswordAgain] = useState(false);
   const [phoneNumberIcon, setPhoneNumberIcon] = useState(require('@/assets/images/noEdit.png'));
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(true);
 
+  const { getData } = useAsyncStorage();
 
-  const handleEditFirstNamePress = () => {
+  async function changePassword(){
+      const userId = Number(await getData("userID"));
+      const response = await fetch(`${ipConfig}UserProfile/ChangePassword`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({UserId: userId, OldPassword: currentPassword, NewPassword: newPassword})
+      })
+      if(response.ok){
+        const data = await response.json();
+        alert('Değişiklikler kaydedildi!');
+      }
+  }
+
+  const handleEditCurrentPassword = () => {
     setFirstNameIcon(require('@/assets/images/edit.png'));
-    setIsEditingFirstName(true);
+    setIsEditingCurrentPassword(true);
     setIsSaveButtonDisabled(false);
   };
 
-  const handleEditLastNamePress = () => {
+  const handleEditNewPassword = () => {
     setLastNameIcon(require('@/assets/images/edit.png'));
-    setIsEditingLastName(true);
+    setIsEditingNewPassword(true);
     setIsSaveButtonDisabled(false);
   };
 
-  const handleEditPhoneNumberPress = () => {
+  const handleEditPasswordAgain = () => {
     setPhoneNumberIcon(require('@/assets/images/edit.png'));
-    setIsEditingPhoneNumber(true);
+    setIsEditingPasswordAgain(true);
     setIsSaveButtonDisabled(false);
   };
 
@@ -42,7 +58,7 @@ const PasswordChangeScreen = ({navigation}) => {
 
   const handleModalSave = () => {
     setIsModalVisible(false);
-    alert('Değişiklikler kaydedildi!');
+    changePassword();
   };
 
   const handleModalCancel = () => {
@@ -65,13 +81,13 @@ const PasswordChangeScreen = ({navigation}) => {
           <TextInput
             style={styles.input}
             placeholder="Mevcut Şifrenizi Girin"
-            value={firstName}
-            onChangeText={setFirstName}
-            editable={isEditingFirstName}
+            value={currentPassword}
+            onChangeText={setCurrentPassword}
+            editable={isEditingCurrentPassword}
           />
           <TouchableOpacity
             style={styles.editIcon}
-            onPress={handleEditFirstNamePress}
+            onPress={handleEditCurrentPassword}
           >
             <Image
               source={firstNameIcon}
@@ -84,14 +100,14 @@ const PasswordChangeScreen = ({navigation}) => {
           
           <TextInput
             style={styles.input}
-            value={lastName}
+            value={newPassword}
             placeholder="Yeni Şifrenizi Girin"
-            onChangeText={setLastName}
-            editable={isEditingLastName}
+            onChangeText={setNewPassword}
+            editable={isEditingNewPassword}
           />
           <TouchableOpacity
             style={styles.editIcon}
-            onPress={handleEditLastNamePress}
+            onPress={handleEditNewPassword}
           >
             <Image
               source={lastNameIcon}
@@ -105,13 +121,14 @@ const PasswordChangeScreen = ({navigation}) => {
           <TextInput
             style={styles.input}
             placeholder="Yeni Şİfrenizi Tekrar Girin"
-            onChangeText={setPhoneNumber}
+            value={passwordAgain}
+            onChangeText={setPasswordAgain}
             keyboardType="phone-pad"
-            editable={isEditingPhoneNumber}
+            editable={isEditingPasswordAgain}
           />
           <TouchableOpacity
             style={styles.editIcon}
-            onPress={handleEditPhoneNumberPress}
+            onPress={handleEditPasswordAgain}
           >
             <Image
               source={phoneNumberIcon}

@@ -14,18 +14,31 @@ const CalenderScreen = ({ navigation }) => {
   const [eventTitle, setEventTitle] = useState("");
   const [events, setEvents] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState('calendar');
+  const [isLoading, setIsLoading] = useState(false);
+
 
   async function getAllDates(){
     const UserId = Number(await getData("userID"));
-    const response = await fetch(`${ipConfig}SpecialDayCalendar/GetAllSpecialDays?userId=${UserId}`)
-    const data = await response.json();
-    const specialDate = data["$values"]
-    const specialDateArray = [];
-    specialDate.forEach(specialDay => {
-      specialDateArray.push({id: specialDay.specialDayId, title: specialDay.title, date: new Date(specialDay.specialDayDate + "Z")})
-    });
-    setEvents(specialDateArray);
-  }
+    try {
+        const response = await fetch(`${ipConfig}SpecialDayCalendar/GetAllSpecialDays?userId=${UserId}`)
+        setIsLoading(true);
+        if(response.ok){
+            const data = await response.json();
+            const specialDate = data["$values"]
+            const specialDateArray = [];
+            specialDate.forEach(specialDay => {
+              specialDateArray.push({id: specialDay.specialDayId, title: specialDay.title, date: new Date(specialDay.specialDayDate + "Z")})
+            });
+            setEvents(specialDateArray);
+        }else {
+          setErrorMessage("Hata oluştu");
+        }
+      } catch (error) {
+        console.error("Hata oluştu:", error);
+      } finally {
+        setIsLoading(false);
+      }
+}
 
   const handleNavigation = (menu) => {
     setSelectedMenu(menu); 

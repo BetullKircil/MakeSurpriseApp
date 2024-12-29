@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import useAsyncStorage from '../../helper/useAsyncStorage';
+import {ipConfig} from "../../../scripts/enums"
+
 
 const CargoTrackingScreen = ({ navigation }) => {
   const [activeStatus, setActiveStatus] = useState(1);
+  const [cargoData, setCargoData] = useState([]);
 
   const statuses = [
     "Hazırlanıyor",
@@ -10,6 +14,18 @@ const CargoTrackingScreen = ({ navigation }) => {
     "Dağıtımda",
     "Teslim Edildi"
   ];
+  const { getData } = useAsyncStorage();
+
+  useEffect(() => {
+    async function getAllCargoInfo(){
+      const userId = Number(await getData("userID"));
+      const response = await fetch(`${ipConfig}UserProfile/GetAllCargos?userId=${userId}`)
+      const data = await response.json();
+      console.log("kargo takibi: ", data)
+      setCargoData(data["$values"])
+    }
+    getAllCargoInfo()
+  }, [])
 
   return (
     <View style={styles.container}>
@@ -47,20 +63,19 @@ const CargoTrackingScreen = ({ navigation }) => {
       <View style={styles.detailsCard}>
         <Text style={styles.cardTitle}>Teslim Edilecek Adres ve Alıcı Bilgileri</Text>
         <View style={styles.addressSection}>
-          <Text style={styles.name}>Eylül Ev</Text>
-          <Text style={styles.recipient}>Eylül Öz</Text>
-          <Text style={styles.phone}>505****12</Text>
-          <Text style={styles.address}>
-            Yeditepe Mah. Çamdib Sok. No: 8 Belkıs Evleri C Blok Kat:1 No:11
-            Şahinbey/G.Antep
-          </Text>
+          <Text style={styles.name}>{cargoData.address.addressTag}</Text>
+          <Text style={styles.recipient}>{cargoData.userRelative.firstName + " " + cargoData.userRelative.lastName}</Text>
+          <Text style={styles.phone}>{cargoData.userRelative.phoneNumber}</Text>
+          <Text style={styles.address}>{cargoData.address.district.sehirAdi}</Text>
+          <Text style={styles.address}>{cargoData.address.district.ilceAdi}</Text>
+          <Text style={styles.address}>{cargoData.address.fullAddress}</Text>
         </View>
       </View>
 
       <View style={styles.detailsCard}>
         <Text style={styles.cardTitle}>Fiyat Ve Ödeme Bilgileri</Text>
         <View style={styles.priceSection}>
-          <Text style={styles.price}>279.99 TL</Text>
+          <Text style={styles.price}>{cargoData.price} TL</Text>
           <Text style={styles.paymentMethod}>Cüzdan ile Ödeme</Text>
         </View>
       </View>

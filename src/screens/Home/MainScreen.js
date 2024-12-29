@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import Loading from "../../components/common/Loading"
 import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { login, mainScreenWelcomeText, signup } from '@/scripts/enums';
 
 const MainScreen = ( {navigation} ) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,20 +17,20 @@ const MainScreen = ( {navigation} ) => {
         source={require('@/assets/images/mainScreenSurpriseBox.png')} 
         style={styles.logo}
       />
-      <Text style={styles.mainPageText}>Hey! Sen. Kendini ve sevdiklerini gizemli bir yolculuğa çıkarmaya hazır mısın? Hazırsan hadi başlayalım...</Text>
+      <Text style={styles.mainPageText}>{mainScreenWelcomeText}</Text>
 
       <View style={styles.buttonContainer}>
       <TouchableOpacity
         style={styles.loginButton}
         onPress={() => navigation.navigate('Login')}
       >
-        <Text style={styles.buttonText}>Giriş Yap</Text>
+        <Text style={styles.buttonText}>{login}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.registerButton}
         onPress={() => navigation.navigate('Signup')}
       >
-        <Text style={styles.buttonText}>Kaydol</Text>
+        <Text style={styles.buttonText}>{signup}</Text>
       </TouchableOpacity>
       </View>
     </View>

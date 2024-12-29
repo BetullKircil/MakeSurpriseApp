@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Modal, Button, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Modal, Button, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import useAsyncStorage from '../../helper/useAsyncStorage';
+import {ipConfig} from "../../../scripts/enums"
 
 const UserProfileInfoScreen = ({ navigation }) => {
   const [firstName, setFirstName] = useState('');
@@ -17,6 +19,40 @@ const UserProfileInfoScreen = ({ navigation }) => {
   const [phoneNumberIcon, setPhoneNumberIcon] = useState(require('@/assets/images/noEdit.png'));
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(true);
 
+  const { getData } = useAsyncStorage();
+
+useEffect(() => {
+ async function getAllUserProfile(){
+      const userId = Number(await getData("userID"));
+      const response = await fetch(`${ipConfig}UserProfile/GetUserInfo?userId=${userId}`)
+      if(response.ok){
+        const data = await response.json();
+        setFirstName(data.firstName)
+        setLastName(data.lastName)
+        setPhoneNumber(data.phoneNumber)
+        console.log("data: ", data)
+      }
+ }
+ getAllUserProfile()
+}, [])
+
+async function saveUserProfile(){
+  const userId = Number(await getData("userID"));
+  const response = await fetch(`${ipConfig}UserProfile/ChangeUserInfo`,
+    {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({UserId: userId, FirstName: firstName, LastName: lastName, PhoneNumber:phoneNumber})
+    }
+  )
+  if(response.ok){
+    const data = await response.json();
+    setFirstName(data.firstName)
+    setLastName(data.lastName)
+    setPhoneNumber(data.phoneNumber)
+    console.log("data: ", data)
+  }
+}
 
   const handleEditFirstNamePress = () => {
     setFirstNameIcon(require('@/assets/images/edit.png'));
@@ -41,6 +77,7 @@ const UserProfileInfoScreen = ({ navigation }) => {
   };
 
   const handleModalSave = () => {
+    saveUserProfile();
     setIsModalVisible(false);
     alert('Değişiklikler kaydedildi!');
   };
@@ -51,104 +88,103 @@ const UserProfileInfoScreen = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>👤 Kullanıcı Bilgilerim</Text>
-        </View>
-        <Image
-          source={require('@/assets/images/changeProfileInfoGif.png')}
-          style={styles.profileImage}
-        />
-        <Text style={[styles.label, styles.boldLabel]}>Ad :</Text>
-        <View style={styles.inputContainer}>
-          
-          <TextInput
-            style={styles.input}
-            placeholder="Adınızı girin"
-            value={firstName}
-            onChangeText={setFirstName}
-            editable={isEditingFirstName}
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Text style={styles.headerText}>👤 Kullanıcı Bilgilerim</Text>
+          </View>
+          <Image
+            source={require('@/assets/images/changeProfileInfoGif.png')}
+            style={styles.profileImage}
           />
-          <TouchableOpacity
-            style={styles.editIcon}
-            onPress={handleEditFirstNamePress}
-          >
-            <Image
-              source={firstNameIcon}
-              style={styles.editInfoIcons}
+          <Text style={[styles.label, styles.boldLabel]}>Ad :</Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Adınızı girin"
+              value={firstName}
+              onChangeText={setFirstName}
+              editable={isEditingFirstName}
             />
-          </TouchableOpacity>
-        </View>
-        <Text style={[styles.label, styles.boldLabel]}>Soy Ad :</Text>
-        <View style={styles.inputContainer}>
-          
-          <TextInput
-            style={styles.input}
-            value={lastName}
-            placeholder="Soyadınızı girin"
-            onChangeText={setLastName}
-            editable={isEditingLastName}
-          />
-          <TouchableOpacity
-            style={styles.editIcon}
-            onPress={handleEditLastNamePress}
-          >
-            <Image
-              source={lastNameIcon}
-              style={styles.editInfoIcons}
+            <TouchableOpacity
+              style={styles.editIcon}
+              onPress={handleEditFirstNamePress}
+            >
+              <Image
+                source={firstNameIcon}
+                style={styles.editInfoIcons}
+              />
+            </TouchableOpacity>
+          </View>
+          <Text style={[styles.label, styles.boldLabel]}>Soy Ad :</Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              value={lastName}
+              placeholder="Soyadınızı girin"
+              onChangeText={setLastName}
+              editable={isEditingLastName}
             />
-          </TouchableOpacity>
-        </View>
-        <Text style={[styles.label, styles.boldLabel]}>Telefon numarası :</Text>
-        <View style={styles.inputContainer}>
-          
-          <TextInput
-            style={styles.input}
-            placeholder="Telefon numaranızı girin"
-            value={phoneNumber}
-            onChangeText={setPhoneNumber}
-            keyboardType="phone-pad"
-            editable={isEditingPhoneNumber}
-          />
-          <TouchableOpacity
-            style={styles.editIcon}
-            onPress={handleEditPhoneNumberPress}
-          >
-            <Image
-              source={phoneNumberIcon}
-              style={styles.editInfoIcons}
+            <TouchableOpacity
+              style={styles.editIcon}
+              onPress={handleEditLastNamePress}
+            >
+              <Image
+                source={lastNameIcon}
+                style={styles.editInfoIcons}
+              />
+            </TouchableOpacity>
+          </View>
+          <Text style={[styles.label, styles.boldLabel]}>Telefon numarası :</Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Telefon numaranızı girin"
+              value={phoneNumber}
+              onChangeText={setPhoneNumber}
+              keyboardType="phone-pad"
+              editable={isEditingPhoneNumber}
             />
+            <TouchableOpacity
+              style={styles.editIcon}
+              onPress={handleEditPhoneNumberPress}
+            >
+              <Image
+                source={phoneNumberIcon}
+                style={styles.editInfoIcons}
+              />
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            style={[styles.saveButton, isSaveButtonDisabled && styles.disabledButton]}
+            onPress={handleSaveChanges}
+            disabled={isSaveButtonDisabled}
+          >
+            <Text style={styles.saveButtonText}>Değişiklikleri Kaydet</Text>
           </TouchableOpacity>
-        </View>
-        <TouchableOpacity
-          style={[styles.saveButton, isSaveButtonDisabled && styles.disabledButton]}
-          onPress={handleSaveChanges}
-          disabled={isSaveButtonDisabled}
-        >
-          <Text style={styles.saveButtonText}>Değişiklikleri Kaydet</Text>
-        </TouchableOpacity>
 
-        <Modal
-          transparent={true}
-          visible={isModalVisible}
-          onRequestClose={() => setIsModalVisible(false)}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>Emin misiniz?</Text>
-              <Text style={styles.modalText}>Değişiklikleri kaydetmek istediğinizden emin misiniz?</Text>
-              <View style={styles.modalButtons}>
-                <Button title="Hayır" color="#ff0000" onPress={handleModalCancel} />
-                <Button title="Evet" onPress={handleModalSave} />
+          <Modal
+            transparent={true}
+            visible={isModalVisible}
+            onRequestClose={() => setIsModalVisible(false)}
+          >
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <Text style={styles.modalTitle}>Emin misiniz?</Text>
+                <Text style={styles.modalText}>Değişiklikleri kaydetmek istediğinizden emin misiniz?</Text>
+                <View style={styles.modalButtons}>
+                  <Button title="Hayır" color="#ff0000" onPress={handleModalCancel} />
+                  <Button title="Evet" onPress={handleModalSave} />
+                </View>
               </View>
             </View>
-          </View>
-        </Modal>
-      </View>
+          </Modal>
+        </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };

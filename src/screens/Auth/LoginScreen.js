@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
-import Loading from "../../components/common/Loading"
 import { Image, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {ipConfig} from "../../../scripts/enums"
+import {invalidMailError, ipConfig, loginError, signup} from "../../../scripts/enums"
 import { ActivityIndicator } from 'react-native';
 
 
@@ -25,7 +24,6 @@ const  HomeScreen = ({navigation}) =>{
     }
   };
 
-  const isButtonDisabled = email.trim() === '' || password.trim() === '';
   async function handleLogin() {
     setIsEmailTouched(true);
     const isEmailValid = emailRegex.test(email.trim()); 
@@ -58,7 +56,7 @@ const  HomeScreen = ({navigation}) =>{
         await storeData("userID", data.user.userId.toString());
         navigation.navigate('HomePageScreen');
       } else {
-        setErrorMessage("Giriş bilgileri hatalı. Lütfen tekrar deneyin.");
+        setErrorMessage(loginError);
       }
     } catch (error) {
       console.error("Hata oluştu:", error);
@@ -85,7 +83,7 @@ const  HomeScreen = ({navigation}) =>{
             style={[styles.input, { borderColor: !isEmailValid && isEmailTouched ? 'red' : '#ddd' }]} 
             onFocus={() => setIsEmailTouched(true)}
           />
-          {!isEmailValid && <Text style={styles.errorText}>Geçersiz email formatı.</Text>}
+          {!isEmailValid && <Text style={styles.errorText}>{invalidMailError}</Text>}
 
           <TextInput
             placeholder="Şifre"
@@ -106,7 +104,7 @@ const  HomeScreen = ({navigation}) =>{
           <View style={styles.policyContainer}>
             <Text style={styles.policyText}>Hesabın Yok mu?</Text>
             <Text style={styles.registerText} onPress={() => navigation.navigate('Signup')}>
-              Kaydol
+              {signup}
             </Text>
           </View>
         </>

@@ -2,7 +2,20 @@ import React from "react";
 import { ScrollView, Image, StyleSheet } from "react-native";
 
 const BrandCarousel = () => {
-  const brands = Array(12).fill(require("@/assets/images/anonymous-person.png")); 
+  const brands = [
+    require("@/assets/images/adidas.png"),
+    require("@/assets/images/beko.png"),
+    require("@/assets/images/burberry.png"),
+    require("@/assets/images/holzinger.png"),
+    require("@/assets/images/under-armour.png"),
+    require("@/assets/images/mekan-moda.png"),
+    require("@/assets/images/chanel.png"),
+    require("@/assets/images/lacoste.png"),
+    require("@/assets/images/lumberjack.png"),
+    require("@/assets/images/nike.png"),
+    require("@/assets/images/samsung.png"),
+    require("@/assets/images/slazenger.png"),
+  ];
 
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.container}>
@@ -23,5 +36,6 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     marginHorizontal: 5,
+    borderRadius: 30,
   },
 });

@@ -3,6 +3,7 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View, Modal } from 'reac
 import useAsyncStorage from '../../helper/useAsyncStorage';
 import TagSelector from '../../components/Order/TagSelector';
 import CustomTagSelectionModal from '../../components/Order/CustomTagSelectionModal';
+import { phoneNumberFormatError } from '@/scripts/enums';
 
 
 const AddUserRelative = ( {navigation, route}) => {
@@ -15,6 +16,7 @@ const AddUserRelative = ( {navigation, route}) => {
     const [lastName, setLastName] = useState('');
     const [phone, setPhone] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const toggleTag = (tag) => {
         if (selectedTags.includes(tag)) {
@@ -33,6 +35,36 @@ const AddUserRelative = ( {navigation, route}) => {
         setCustomTag('');
     };
 
+    const changePhoneNumberHandle = (value) => {
+        let rawValue = value.replace(/\D/g, "");
+            setErrorMessage(null);
+        let formattedValue = "";
+        if (rawValue.startsWith("0")) {
+            if (rawValue.length <= 11) {
+                formattedValue = rawValue
+                    .replace(/(\d{1})(\d{0,3})/, "$1 $2")
+                    .replace(/(\d{1} \d{3})(\d{0,3})/, "$1 $2")
+                    .replace(/(\d{1} \d{3} \d{3})(\d{0,2})/, "$1 $2")
+                    .replace(/(\d{1} \d{3} \d{3} \d{2})(\d{0,2})/, "$1 $2");
+            } else {
+                setErrorMessage(phoneNumberFormatError);
+                formattedValue = value; 
+            }
+        } else {
+            if (rawValue.length <= 10) {
+                formattedValue = rawValue
+                    .replace(/(\d{0,3})/, "$1")
+                    .replace(/(\d{3})(\d{0,3})/, "$1 $2")
+                    .replace(/(\d{3} \d{3})(\d{0,2})/, "$1 $2")
+                    .replace(/(\d{3} \d{3} \d{2})(\d{0,2})/, "$1 $2");
+            } else {
+                setErrorMessage(phoneNumberFormatError);
+                formattedValue = value; 
+            }
+        }
+        setPhone(formattedValue);
+    };
+    
     const isButtonDisabled = !firstName.trim() || !lastName.trim() || !phone.trim() || selectedTags.length === 0;
 
     const handleSubmit = async () => {
@@ -77,8 +109,9 @@ const AddUserRelative = ( {navigation, route}) => {
                 keyboardType="phone-pad"
                 style={styles.input}
                 value={phone}
-                onChangeText={setPhone}
+                onChangeText={changePhoneNumberHandle}
             />
+            {errorMessage !== '' && <Text style={styles.stackErrorMessageText}>{errorMessage}</Text>}
             <TagSelector
                 tags={["Aile", "Sevgili", "Arkadaş", "Özel Gün", "Diğer"]}
                 selectedTags={selectedTags}
@@ -115,6 +148,13 @@ const styles = StyleSheet.create({
         padding: 20,
         justifyContent: 'center',
     },
+    stackErrorMessageText:{
+        color: 'red',
+        marginTop: -5,
+        marginRight: 95,
+        fontSize: 10,
+        marginBottom: 10
+      },
     title: {
         fontSize: 24,
         fontWeight: 'bold',

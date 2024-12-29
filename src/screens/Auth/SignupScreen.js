@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import Loading from "../../components/common/Loading"
 import { Image, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
 import CheckBox from 'react-native-check-box'
-import {ipConfig} from "../../../scripts/enums"
+import {alreadyHaveAnAccount, invalidMailError, ipConfig, login, securityPolicy} from "../../../scripts/enums"
 
 const SignupScreen = ({navigation}) => {
   const [password, setPassword] = useState('');
@@ -93,7 +93,7 @@ const SignupScreen = ({navigation}) => {
         onFocus={() => setIsEmailTouched(true)}
       />
       {!isEmailValid && isEmailTouched && (
-        <Text style={styles.errorText}>Geçersiz e-mail formatı.</Text>
+        <Text style={styles.errorText}>{invalidMailError}</Text>
       )}
       <TextInput
         placeholder="Şifre"
@@ -107,7 +107,7 @@ const SignupScreen = ({navigation}) => {
           onClick={() => setIsChecked(!isChecked)}
           isChecked={isChecked}
         />
-        <Text style={styles.policyText}>Gizlilik politikasını okudum ve onaylıyorum</Text>
+        <Text style={styles.policyText}>{securityPolicy}</Text>
       </View>
       <TouchableOpacity
         style={[styles.registerButton, { opacity: isButtonDisabled ? 0.5 : 1 }]}
@@ -117,9 +117,9 @@ const SignupScreen = ({navigation}) => {
         <Text style={styles.buttonText}>Kaydol</Text>
       </TouchableOpacity>
       <View style={styles.alreadyHaveAccountContainer}>
-        <Text style={styles.alreadyHaveAccountText}>Zaten Bir Hesabın Var mı?</Text>
+        <Text style={styles.alreadyHaveAccountText}>{alreadyHaveAnAccount}</Text>
         <Text style={styles.registerText} onPress={() => navigation.navigate('Login')}>
-          Giriş Yap
+          {login}
         </Text>
       </View>
     </View>

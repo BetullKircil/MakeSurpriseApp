@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import BottomBarNavigation from "../../components/common/BottomBarNavigation";
 import BrandCarousel from '../../components/Home/BrandCarousel';
 import OptionBox from '../../components/Home/OptionBox';
