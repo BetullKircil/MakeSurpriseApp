@@ -9,6 +9,8 @@ import announceIcon from '@/assets/images/announce.png';
 import MenuItem from '../../components/UserProfile/MenuItem';
 import LogoutModal from '../../components/UserProfile/LogoutModal';
 import logoutIcon from '@/assets/images/logout.png';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import useAsyncStorage from '../../helper/useAsyncStorage';
 
 
 const UserProfileScreen = ({ navigation }) => {
@@ -22,6 +24,26 @@ const UserProfileScreen = ({ navigation }) => {
     { label: 'Şifre Değişikliği', icon: passwordIcon, screen: 'PasswordChangeScreen' },
     { label: 'Duyuru Tercihlerim', icon: announceIcon, screen: 'AnnouncementPreferencesScreen' },
   ];
+
+  const { getData } = useAsyncStorage();
+
+  const handleLogout = async (navigation) => {
+    try {
+      const UserId = Number(await getData("userID"));
+      console.log("logout userId", UserId);
+      await AsyncStorage.removeItem("userID"); 
+      console.log("Oturum kapatıldı");
+      console.log("Oturum kapatıldı userId", UserId);
+        navigation.reset({
+        index: 0,
+        routes: [{ name: "Login" }],
+      });
+    } catch (error) {
+      console.error("Çıkış işlemi sırasında hata oluştu:", error);
+    }
+  };
+  
+  
 
   const handleMenuActivity = (menu) => {
     setSelectedMenu(menu);
@@ -44,7 +66,7 @@ const UserProfileScreen = ({ navigation }) => {
           />
         ))}
         <MenuItem
-          label="Logout"
+          label="Oturumu Kapat >"
           icon={logoutIcon}
           onPress={() => setLogoutModalVisible(true)}
         />
@@ -55,7 +77,7 @@ const UserProfileScreen = ({ navigation }) => {
         onCancel={() => setLogoutModalVisible(false)}
         onConfirm={() => {
           setLogoutModalVisible(false);
-          console.log("Çıkış yapıldı.");
+          handleLogout(navigation);
         }}
       />
 

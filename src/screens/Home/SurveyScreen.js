@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import {ipConfig} from "../../../scripts/enums"
+import {finish, ipConfig} from "../../../scripts/enums"
+import useAsyncStorage from '../../helper/useAsyncStorage';
 
 const SurveyScreen = ({ navigation, route }) => {
   const {ProfileInfo} = route.params;
@@ -9,6 +10,8 @@ const SurveyScreen = ({ navigation, route }) => {
   const [answers, setAnswers] = useState([]);
  console.log(userSurveyQuestions.length, userSurveyQuestions.length === 0)
  console.log("kflvjdfk")
+
+ const { getData } = useAsyncStorage();
 
   useEffect(() => {
     async function getSurveyQuestions(){
@@ -33,6 +36,7 @@ const SurveyScreen = ({ navigation, route }) => {
   };
 
   const handleFinish = async () => {
+    const UserId = Number(await getData("userID"));
     const profileTestAnswers = answers.reduce((acc, { questionId, optionId }) => {
       const key = `${['First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh',
                       'Eighth', 'Ninth', 'Tenth', 'Eleventh', 'Twelfth', 'Thirteenth', 
@@ -50,8 +54,9 @@ const SurveyScreen = ({ navigation, route }) => {
     })
     if(response.ok){
       const data = await response.json()
-      console.log("data:", data)
-      navigation.navigate("UserCustomizeSurpriseScreen");
+      console.log("form ekranı datası:", data)
+      // navigation.navigate("UserCustomizeSurpriseScreen");
+      navigation.navigate('UserCustomizeSurpriseScreen', { user: data.userRelativeId });
     }
   };
   
@@ -77,7 +82,7 @@ const SurveyScreen = ({ navigation, route }) => {
 
       {currentQuestionIndex === userSurveyQuestions.length - 1 && (
         <TouchableOpacity style={styles.finishButton} onPress={handleFinish}>
-          <Text style={styles.finishButtonText}>Tamamla</Text>
+          <Text style={styles.finishButtonText}>{finish}</Text>
         </TouchableOpacity>
       )}
 

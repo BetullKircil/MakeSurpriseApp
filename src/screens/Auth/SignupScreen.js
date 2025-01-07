@@ -45,9 +45,7 @@ const SignupScreen = ({navigation}) => {
       Email: email,
       Password: password,
     };
-  
-    console.log("Request Data:", requestData);
-  
+
     try {
       const response = await fetch(`${ipConfig}Auth/Register`, {
         method: "POST",
@@ -56,9 +54,12 @@ const SignupScreen = ({navigation}) => {
         },
         body: JSON.stringify(requestData),
       });
-        if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+        if (response.ok) {
+          navigation.navigate("Login")
+        }
+        else{
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const responseData = await response.json();
       console.log("Response Data:", responseData);
     } catch (error) {

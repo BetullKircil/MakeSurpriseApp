@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,12 +10,22 @@ import {
   Alert,
 } from "react-native";
 import { Dropdown } from 'react-native-element-dropdown';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import useAsyncStorage from '../../helper/useAsyncStorage';
+import DeleteUserAddressModal from '../../components/UserProfile/DeleteUserAddressModal';
+import { ipConfig } from "@/scripts/enums";
 
 const UserAddressInfoScreen = ({navigation}) => {
-  const [value, setValue] = useState(null);
-  const [isFocus, setIsFocus] = useState(false);
+  const [provinceValue, setProvinceValue] = useState("");
+  const [districtValue, setDistrictValue] = useState("");
+  const [addressId, setAddressIdToDelete] = useState("");
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
+  const [fullAddressValue, setFullAddressValue] = useState("");
+  const [addressTitleValue, setAddressTitleValue] = useState("");
+  const [isFocusProvince, setIsFocusProvince] = useState(false);
+  const [isFocusDistrict, setIsFocusDistrict] = useState(false);
   const [addresses, setAddresses] = useState([]);
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
   const data = [
     { label: 'Item 1', value: '1' },
     { label: 'Item 2', value: '2' },
@@ -34,26 +44,97 @@ const UserAddressInfoScreen = ({navigation}) => {
     districtAndcity: "",
     details: "",
   });
-
-  const addAddress = () => {
+  const { getData } = useAsyncStorage();
+  
+  const addAddress = async () => {
     if (
-      newAddress.title &&
-      newAddress.name &&
-      newAddress.phone &&
-      newAddress.details &&
-      newAddress.city
+      addressTitleValue && fullAddressValue && provinceValue && districtValue
     ) {
-      setAddresses([...addresses, newAddress]);
-      setNewAddress({ title: "", name: "", phone: "", details: "", city: "" });
-      setModalVisible(false);
-    } else {
+      const UserId = Number(await getData("userID"));
+      const response = await fetch(`${ipConfig}Address/AddAddress`, 
+        {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({UserId: UserId, AddressTag: addressTitleValue, ProvinceId: provinceValue, DistrictId: districtValue, FullAddress: fullAddressValue, NeighbourhoodId: 1})
+        }
+      )
+      if (response.ok) {
+        Alert.alert(
+          "Başarılı", 
+          "Adres başarılı bir şekilde kaydedildi!", 
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                setAddressTitleValue("");
+                setFullAddressValue("");
+                setProvinceValue("");
+                setDistrictValue("");
+                getAllAddresses(); 
+              }
+            }
+          ]
+        );
+      }
+    }else {
       Alert.alert("Hata", "Lütfen tüm alanları doldurun!");
     }
   };
+  
+  async function getAllProvinces(){
+    const response = await fetch(`${ipConfig}Address/GetAllProvinces`)
+    const data = await response.json();
+    const provincesData = data["$values"].map(province => {
+      return (
+        {
+          label: province.sehirAdi,
+          value: province.sehirId
+        }
+      )
+    })
+    setProvinces(provincesData)
+  }
+  async function getAllAddresses() {
+    console.log("girdi")
+    const UserId = Number(await getData("userID"));
+    const response = await fetch(`${ipConfig}Address/GetAllAddresses?userId=${UserId}`)
+    if(response.ok){
+      const data = await response.json();
+      setAddresses(data["$values"])
+      console.log("new address data", data["$values"])
+    }
+  }
 
-  const deleteAddress = (index) => {
-    const updatedAddresses = addresses.filter((_, i) => i !== index);
-    setAddresses(updatedAddresses);
+  useEffect(() => {
+    getAllAddresses();
+    getAllProvinces();
+  }, [])
+
+  function selectDistrictHandle(districtId) {
+    console.log("districtId:", districtId)
+    setDistrictValue(districtId)
+  }
+  async function selectProvinceHandle(provinceId){
+    console.log(provinceId)
+    setProvinceValue(provinceId)
+    const response = await fetch(`${ipConfig}Address/GetAllDistricts?provinceId=${provinceId}`)
+    const data = await response.json()
+    const districtData = data["$values"].map(district => {
+      return(
+        {
+          label: district.ilceAdi,
+          value: district.ilceId
+        }
+      )
+    })
+    setDistricts(districtData);
+  }
+
+  const deleteAddress = async (addressId) => {
+    const response = await fetch(`${ipConfig}Address/DeleteAddress?addressId=${addressId}`)
+    if(response.ok){
+      getAllAddresses();
+    }
   };
 
   return (
@@ -69,25 +150,37 @@ const UserAddressInfoScreen = ({navigation}) => {
         </TouchableOpacity>
 
       <FlatList
+      style={styles.addressContainer}
         data={addresses}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item, index }) => (
           <View style={styles.addressCard}>
-            <Text style={styles.addressTitle}>{item.title}</Text>
-            <Text style={styles.addressText}>{item.name}</Text>
-            <Text style={styles.addressText}>{item.phone}</Text>
-            <Text style={styles.addressText}>{item.districtAndcity}</Text>
-            <Text style={styles.addressText}>{item.details}</Text>
+            <Text style={styles.addressTitle}>{item.addressTag}</Text>
+            <Text style={styles.addressText}>{item.sehirAdi + " / " + item.ilceAdi}</Text>
+            <Text style={styles.addressText}>{item.fullAddress}</Text>
             <TouchableOpacity
               style={styles.deleteButton}
-              onPress={() => deleteAddress(index)}
+              // onPress={() => deleteAddress(item.addressId)}
+              onPress={() => {
+                setLogoutModalVisible(true)
+                setAddressIdToDelete(item.addressId)
+                }    
+              }
             >
               <Text style={styles.deleteButtonText}>Sil</Text>
             </TouchableOpacity>
           </View>
         )}
       />
-
+      <DeleteUserAddressModal
+        visible={logoutModalVisible}
+        addressId={addressId}
+        onCancel={() => setLogoutModalVisible(false)}
+        onConfirm={() => {
+          setLogoutModalVisible(false);
+          deleteAddress(addressId);
+        }}
+      />
       <Modal visible={isModalVisible} transparent={true} animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -95,86 +188,74 @@ const UserAddressInfoScreen = ({navigation}) => {
             <TextInput
               style={styles.input}
               placeholder="Başlık"
-              value={newAddress.title}
-              onChangeText={(text) =>
-                setNewAddress({ ...newAddress, title: text })
+              value={addressTitleValue}
+              onChangeText={(text) =>{
+                setAddressTitleValue(text);
+              }
               }
             />
             <View style={styles.dropdownContainer}>
               <Dropdown
-                style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                style={[styles.dropdown, isFocusProvince && { borderColor: 'blue' }]}
                 placeholderStyle={styles.placeholderStyle}
                 selectedTextStyle={styles.selectedTextStyle}
                 iconStyle={styles.iconStyle}
-                data={data}
+                data={provinces}
                 maxHeight={300}
                 labelField="label"
                 valueField="value"
-                placeholder={!isFocus ? 'İl Seçiniz' : '...'}
+                placeholder={!isFocusProvince ? 'İl Seçiniz' : '...'}
                 searchPlaceholder="Search..."
-                value={value}
-                onFocus={() => setIsFocus(true)}
-                onBlur={() => setIsFocus(false)}
+                // value={provinceValue}
+                onFocus={() => setIsFocusProvince(true)}
+                onBlur={() => setIsFocusProvince(false)}
                 onChange={item => {
-                  setValue(item.value);
-                  setIsFocus(false);
+                  // setProvinceValue(prevProvince => item.label);
+                  setIsFocusProvince(false);
+                  selectProvinceHandle(item.value);
                 }}
               />
             </View>
             <View style={styles.dropdownContainer}>
               <Dropdown
-                style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                style={[styles.dropdown, isFocusDistrict && { borderColor: 'blue' }]}
                 placeholderStyle={styles.placeholderStyle}
                 selectedTextStyle={styles.selectedTextStyle}
                 iconStyle={styles.iconStyle}
-                data={data}
+                data={districts}
                 maxHeight={300}
                 labelField="label"
                 valueField="value"
-                placeholder={!isFocus ? 'İlçe Seçiniz' : '...'}
+                placeholder={!isFocusDistrict ? 'İlçe Seçiniz' : '...'}
                 searchPlaceholder="Search..."
-                value={value}
-                onFocus={() => setIsFocus(true)}
-                onBlur={() => setIsFocus(false)}
+                // value={districtValue}
+                onFocus={() => setIsFocusDistrict(true)}
+                onBlur={() => setIsFocusDistrict(false)}
                 onChange={item => {
-                  setValue(item.value);
-                  setIsFocus(false);
-                }}
-              />
-            </View>
-            <View style={styles.dropdownContainer}>
-              <Dropdown
-                style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
-                placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={styles.selectedTextStyle}
-                iconStyle={styles.iconStyle}
-                data={data}
-                maxHeight={300}
-                labelField="label"
-                valueField="value"
-                placeholder={!isFocus ? 'Mahalle Seçiniz' : '...'}
-                searchPlaceholder="Search..."
-                value={value}
-                onFocus={() => setIsFocus(true)}
-                onBlur={() => setIsFocus(false)}
-                onChange={item => {
-                  setValue(item.value);
-                  setIsFocus(false);
+                  // setDistrictValue(item.label);
+                  selectDistrictHandle(item.value);
+                  setIsFocusDistrict(false);
                 }}
               />
             </View>
             <TextInput
               style={styles.input}
               placeholder="Açık Adres"
-              value={newAddress.details}
-              onChangeText={(text) =>
-                setNewAddress({ ...newAddress, details: text })
+              value={fullAddressValue}
+              onChangeText={ (text) => {
+                setFullAddressValue(text);
+                }
               }
             />
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={styles.saveButton}
-                onPress={addAddress}
+                onPress={
+                  () => {
+                    setModalVisible(false)
+                    addAddress()
+                  }
+                  }
               >
                 <Text style={styles.saveButtonText}>Kaydet</Text>
               </TouchableOpacity>
@@ -215,6 +296,9 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 5,
     alignItems: 'center',
+  },
+  addressContainer: {
+    marginTop: 15
   },
   addButtonText: {
     color: "#fff",

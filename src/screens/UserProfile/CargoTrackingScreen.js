@@ -28,60 +28,75 @@ const CargoTrackingScreen = ({ navigation }) => {
   }, [])
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text style={styles.backButton}>{"←"} Kargo Takibi</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.progressContainer}>
-        <Image
-          source={require("@/assets/images/cargoTracking.png")}
-          style={styles.logo}
-        />
-
-        <View style={styles.progressLabels}>
-          {statuses.map((status, index) => (
-            <View key={index} style={styles.statusWrapper}>
-              <Text style={[styles.label, activeStatus === index && styles.activeLabel]}>
-                {status}
-              </Text>
-              <View
-                style={[
-                  styles.circle,
-                  activeStatus === index && styles.activeCircle
-                ]}
-              />
-            </View>
-          ))}
+    cargoData.length === 0 ? (
+      <Text style={styles.backButton}>{"←"} Kargo Takibi</Text>
+    ) : (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Text style={styles.backButton}>{"←"} Kargo Takibi</Text>
+          </TouchableOpacity>
+        </View>
+  
+        <View style={styles.progressContainer}>
+          <Image
+            source={require("@/assets/images/cargoTracking.png")}
+            style={styles.logo}
+          />
+  
+          <View style={styles.progressLabels}>
+            {statuses.map((status, index) => (
+              <View key={index} style={styles.statusWrapper}>
+                <Text
+                  style={[
+                    styles.label,
+                    activeStatus === index && styles.activeLabel,
+                  ]}
+                >
+                  {status}
+                </Text>
+                <View
+                  style={[
+                    styles.circle,
+                    activeStatus === index && styles.activeCircle,
+                  ]}
+                />
+              </View>
+            ))}
+          </View>
+        </View>
+  
+        <Text style={styles.sectionTitle}>Sipariş Detayları :</Text>
+  
+        <View style={styles.detailsCard}>
+          <Text style={styles.cardTitle}>
+            Teslim Edilecek Adres ve Alıcı Bilgileri
+          </Text>
+          <View style={styles.addressSection}>
+            <Text style={styles.name}>{cargoData.address.addressTag}</Text>
+            <Text style={styles.recipient}>
+              {cargoData.userRelative.firstName +
+                " " +
+                cargoData.userRelative.lastName}
+            </Text>
+            <Text style={styles.phone}>{cargoData.userRelative.phoneNumber}</Text>
+            <Text style={styles.address}>{cargoData.address.district.sehirAdi}</Text>
+            <Text style={styles.address}>{cargoData.address.district.ilceAdi}</Text>
+            <Text style={styles.address}>{cargoData.address.fullAddress}</Text>
+          </View>
+        </View>
+  
+        <View style={styles.detailsCard}>
+          <Text style={styles.cardTitle}>Fiyat Ve Ödeme Bilgileri</Text>
+          <View style={styles.priceSection}>
+            <Text style={styles.price}>{cargoData.price} TL</Text>
+            <Text style={styles.paymentMethod}>Cüzdan ile Ödeme</Text>
+          </View>
         </View>
       </View>
-
-      <Text style={styles.sectionTitle}>Sipariş Detayları :</Text>
-
-      <View style={styles.detailsCard}>
-        <Text style={styles.cardTitle}>Teslim Edilecek Adres ve Alıcı Bilgileri</Text>
-        <View style={styles.addressSection}>
-          <Text style={styles.name}>{cargoData.address.addressTag}</Text>
-          <Text style={styles.recipient}>{cargoData.userRelative.firstName + " " + cargoData.userRelative.lastName}</Text>
-          <Text style={styles.phone}>{cargoData.userRelative.phoneNumber}</Text>
-          <Text style={styles.address}>{cargoData.address.district.sehirAdi}</Text>
-          <Text style={styles.address}>{cargoData.address.district.ilceAdi}</Text>
-          <Text style={styles.address}>{cargoData.address.fullAddress}</Text>
-        </View>
-      </View>
-
-      <View style={styles.detailsCard}>
-        <Text style={styles.cardTitle}>Fiyat Ve Ödeme Bilgileri</Text>
-        <View style={styles.priceSection}>
-          <Text style={styles.price}>{cargoData.price} TL</Text>
-          <Text style={styles.paymentMethod}>Cüzdan ile Ödeme</Text>
-        </View>
-      </View>
-    </View>
-  );
-};
+    )
+  ); 
+} 
 
 const styles = StyleSheet.create({
   container: {

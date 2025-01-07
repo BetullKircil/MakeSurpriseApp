@@ -79,12 +79,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   scrollableContainer: {
-    marginTop: 100,
+    marginTop: 115,
   },
   optionsContainer: {
     marginVertical: 120,
     paddingHorizontal: 15,
-    height: 100
+    height: 100,
   },
   optionStyle: {
     marginTop: 50,

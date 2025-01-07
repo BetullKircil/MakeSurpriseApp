@@ -2,19 +2,23 @@ import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image } from 'react
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import useAsyncStorage from '../../helper/useAsyncStorage';
-import {ipConfig} from "../../../scripts/enums"
+import {ipConfig, noFoundSavedProfile, savedProfiles} from "../../../scripts/enums"
 import { ActivityIndicator } from 'react-native';
+import DeleteUserRelativeModal from '../../components/UserProfile/DeleteUserRelativeModal';
 
 
 const MakeSurpriseForYourself = ({route}) => {
     const { userRelativeType} = route.params;
     const [data, setData] = useState([]);
+    const [userRelativeId, setUserRelativeId] = useState([]);
     const [userRelativeProfile, setUserRelativeProfile] = useState([]);
+    const [logoutModalVisible, setLogoutModalVisible] = useState(false);
     const [loading, setLoading] = useState(true);
     const navigation = useNavigation(); 
   
     const handleUserPress = (item) => {
-      navigation.navigate('CustomizeYourSurprise', { user: item }); 
+      console.log("item: ", item)
+      navigation.navigate('UserCustomizeSurpriseScreen', { user: item }); 
     };
     const { getData } = useAsyncStorage();
 
@@ -60,14 +64,30 @@ const MakeSurpriseForYourself = ({route}) => {
             </View>
             <View style={styles.itemStyle}>
               <Text style={styles.nameText}>{`${item.firstName} ${item.lastName}`}</Text>
-              <Text style={styles.nameText}>{`(${item.tag})`}</Text>
+              <Text style={styles.tagText}>{`(${item.tag})`}</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => deleteEvent(item.userRelativeId)}>
+          <TouchableOpacity 
+              // onPress={() => deleteEvent(item.userRelativeId)}
+              onPress={() => {
+                setLogoutModalVisible(true)
+                setUserRelativeId(item.userRelativeId)
+                } 
+              }
+          >
           <Image
               source={require('@/assets/images/delete-icon.png')}
               style={styles.deleteIconLogo}/>
           </TouchableOpacity>
+          <DeleteUserRelativeModal
+            visible={logoutModalVisible}
+            addressId={userRelativeId}
+            onCancel={() => setLogoutModalVisible(false)}
+            onConfirm={() => {
+              setLogoutModalVisible(false);
+              deleteEvent(userRelativeId);
+            }}
+          />
       </View>
       );
     };
@@ -80,17 +100,17 @@ const MakeSurpriseForYourself = ({route}) => {
           </View>
         ) : userRelativeProfile.length === 0 ? (
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>Kaydedilmiş kullanıcı profili bulunamadı!</Text>
+            <Text style={styles.emptyText}>{noFoundSavedProfile}</Text>
             <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddUserRelative', {userRelativeType: userRelativeType})}>
               <Text style={styles.addButtonText}>+</Text>
             </TouchableOpacity>
           </View>
         ) : (
           <>
-            <Text style={styles.title}>Kayıtlı Profillerin</Text>
+            <Text style={styles.title}>{savedProfiles}</Text>
             <FlatList
               data={userRelativeProfile}
-              keyExtractor={(item) => item.id}
+              keyExtractor={(item, index) => item.id?.toString() || index.toString()}
               renderItem={renderItem}
               contentContainerStyle={styles.listContainer}
             />
@@ -144,6 +164,10 @@ const styles = StyleSheet.create({
       borderRadius: 5,
       marginLeft: 20
     },
+    tagText: {
+      fontSize: 16,
+      color: 'green',
+    },
     deleteButtonText: {
       color: "white",
       fontWeight: "bold",
@@ -157,6 +181,7 @@ const styles = StyleSheet.create({
       fontSize: 20,
       color: '#555',
       marginBottom: 20,
+      textAlign: "center"
     },
     addButton: {
       width: 60,

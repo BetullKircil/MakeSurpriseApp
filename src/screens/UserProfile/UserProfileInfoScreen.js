@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Modal, Button, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import useAsyncStorage from '../../helper/useAsyncStorage';
-import {ipConfig} from "../../../scripts/enums"
+import {ipConfig, phoneNumberFormatError} from "../../../scripts/enums"
 
 const UserProfileInfoScreen = ({ navigation }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const [isEditingFirstName, setIsEditingFirstName] = useState(false);
   const [firstNameIcon, setFirstNameIcon] = useState(require('@/assets/images/noEdit.png'));
@@ -20,6 +21,36 @@ const UserProfileInfoScreen = ({ navigation }) => {
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(true);
 
   const { getData } = useAsyncStorage();
+
+  const changePhoneNumberHandle = (value) => {
+    let rawValue = value.replace(/\D/g, "");
+        setErrorMessage(null);
+    let formattedValue = "";
+    if (rawValue.startsWith("0")) {
+        if (rawValue.length <= 11) {
+            formattedValue = rawValue
+                .replace(/(\d{1})(\d{0,3})/, "$1 $2")
+                .replace(/(\d{1} \d{3})(\d{0,3})/, "$1 $2")
+                .replace(/(\d{1} \d{3} \d{3})(\d{0,2})/, "$1 $2")
+                .replace(/(\d{1} \d{3} \d{3} \d{2})(\d{0,2})/, "$1 $2");
+        } else {
+            setErrorMessage(phoneNumberFormatError);
+            formattedValue = value; 
+        }
+    } else {
+        if (rawValue.length <= 10) {
+            formattedValue = rawValue
+                .replace(/(\d{0,3})/, "$1")
+                .replace(/(\d{3})(\d{0,3})/, "$1 $2")
+                .replace(/(\d{3} \d{3})(\d{0,2})/, "$1 $2")
+                .replace(/(\d{3} \d{3} \d{2})(\d{0,2})/, "$1 $2");
+        } else {
+            setErrorMessage(phoneNumberFormatError);
+            formattedValue = value; 
+        }
+    }
+    setPhoneNumber(formattedValue);
+};
 
 useEffect(() => {
  async function getAllUserProfile(){
@@ -72,6 +103,10 @@ async function saveUserProfile(){
     setIsSaveButtonDisabled(false);
   };
 
+  const handlePhoneNumberChange = (value) => {
+    changePhoneNumberHandle(value);
+  };
+  
   const handleSaveChanges = () => {
     setIsModalVisible(true);
   };
@@ -145,7 +180,7 @@ async function saveUserProfile(){
               style={styles.input}
               placeholder="Telefon numaranızı girin"
               value={phoneNumber}
-              onChangeText={setPhoneNumber}
+              onChangeText={handlePhoneNumberChange}
               keyboardType="phone-pad"
               editable={isEditingPhoneNumber}
             />
@@ -159,6 +194,7 @@ async function saveUserProfile(){
               />
             </TouchableOpacity>
           </View>
+          {errorMessage !== '' && <Text style={styles.stackErrorMessageText}>{errorMessage}</Text>}
           <TouchableOpacity
             style={[styles.saveButton, isSaveButtonDisabled && styles.disabledButton]}
             onPress={handleSaveChanges}
@@ -201,6 +237,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     marginBottom: 20,
+  },
+  stackErrorMessageText:{
+    color: 'red',
+    marginTop: -5,
+    marginRight: 95,
+    fontSize: 10,
+    marginBottom: 10
   },
   headerText: {
     fontSize: 18,

@@ -8,6 +8,7 @@ const PasswordChangeScreen = ({navigation}) => {
   const [newPassword, setNewPassword] = useState('');
   const [passwordAgain, setPasswordAgain] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [isEditingCurrentPassword, setIsEditingCurrentPassword] = useState(false);
   const [firstNameIcon, setFirstNameIcon] = useState(require('@/assets/images/noEdit.png'));
@@ -82,6 +83,7 @@ const PasswordChangeScreen = ({navigation}) => {
             style={styles.input}
             placeholder="Mevcut Şifrenizi Girin"
             value={currentPassword}
+            secureTextEntry={!showPassword} 
             onChangeText={setCurrentPassword}
             editable={isEditingCurrentPassword}
           />
@@ -101,6 +103,7 @@ const PasswordChangeScreen = ({navigation}) => {
           <TextInput
             style={styles.input}
             value={newPassword}
+            secureTextEntry={!showPassword} 
             placeholder="Yeni Şifrenizi Girin"
             onChangeText={setNewPassword}
             editable={isEditingNewPassword}
@@ -122,8 +125,9 @@ const PasswordChangeScreen = ({navigation}) => {
             style={styles.input}
             placeholder="Yeni Şİfrenizi Tekrar Girin"
             value={passwordAgain}
+            secureTextEntry={!showPassword} 
             onChangeText={setPasswordAgain}
-            keyboardType="phone-pad"
+            // keyboardType="phone-pad"
             editable={isEditingPasswordAgain}
           />
           <TouchableOpacity

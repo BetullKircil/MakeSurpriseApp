@@ -33,9 +33,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   brandLogo: {
-    width: 60,
-    height: 60,
+    width: 80,
+    height: 80,
     marginHorizontal: 5,
-    borderRadius: 30,
+    borderRadius: 40,
   },
 });

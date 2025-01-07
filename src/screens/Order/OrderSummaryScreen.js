@@ -7,8 +7,7 @@ import AddAddressButton from '../../components/Address/AddAddressButton';
 import { createOrder, orderSummary } from '@/scripts/enums';
 
 
-const OrderSummaryScreen = ({ route }) => {
-  const { budget, note } = route.params;
+const OrderSummaryScreen = () => {
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState('');
   const [isChecked, setIsChecked] = useState(false);
@@ -57,8 +56,8 @@ const OrderSummaryScreen = ({ route }) => {
       <Text style={styles.header}>{orderSummary}</Text>
       <View style={styles.summaryContainer}>
         <AddAddressButton onPress={() => navigation.navigate('UserAddressInfoScreen')} />
-          <Text style={styles.summaryText}>{budget}: ₺{budget}</Text>
-          <Text style={styles.summaryText}>{note}: {note}</Text>
+          {/* <Text style={styles.summaryText}>{budget}: ₺{budget}</Text>
+          <Text style={styles.summaryText}>{note}: {note}</Text> */}
           <AddressDropdown
             addresses={addresses}
             selectedAddress={selectedAddress}

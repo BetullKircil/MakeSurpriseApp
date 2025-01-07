@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   StyleSheet, 
   Text, 
@@ -8,18 +8,56 @@ import {
   TouchableOpacity, 
   ScrollView, 
   KeyboardAvoidingView,
-  Platform 
+  Platform ,
+  BackHandler 
 } from 'react-native';
 import BottomBarNavigation from "../../components/common/BottomBarNavigation";
+import useAsyncStorage from '../../helper/useAsyncStorage';
+import {ipConfig} from "../../../scripts/enums"
 
-const UserCustomizeSurpriseScreen = ({ navigation }) => {
+const UserCustomizeSurpriseScreen = ({ navigation, route }) => {
+  const { user } = route.params;
   const [budget, setBudget] = useState('');
   const [note, setNote] = useState('');
   const isButtonDisabled = !budget;
   const [selectedMenu, setSelectedMenu] = useState('shopping');
 
-  const handleNavigate = () => {
-    navigation.navigate('OrderSummaryScreen', { budget, note });
+  useEffect(() => {
+    const handleBackPress = () => {
+      navigation.navigate('HomePageScreen');
+      return true; 
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      handleBackPress
+    );
+
+    return () => backHandler.remove();
+  }, [navigation]);
+
+  const { getData } = useAsyncStorage();
+
+  const handleNavigate = async () => {
+    const UserId = Number(await getData("userID"));
+    // navigation.navigate('OrderSummaryScreen', { budget, note });
+    const response = await fetch(`${ipConfig}Shopping/AddProduct` , 
+    {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(
+        {
+          UserId: UserId,
+          UserRelativeId: user,
+          Price: budget,
+          Note: note
+        }
+      )
+    }
+  )
+  if(response.ok){
+    navigation.navigate('OrderSummaryScreen')
+  }
   };
 
   const handleMenuActivity = (menu) => {

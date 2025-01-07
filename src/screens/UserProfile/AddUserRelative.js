@@ -3,7 +3,7 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View, Modal } from 'reac
 import useAsyncStorage from '../../helper/useAsyncStorage';
 import TagSelector from '../../components/Order/TagSelector';
 import CustomTagSelectionModal from '../../components/Order/CustomTagSelectionModal';
-import { phoneNumberFormatError } from '@/scripts/enums';
+import { phoneNumberFormatError, profileDeleteError } from '@/scripts/enums';
 
 
 const AddUserRelative = ( {navigation, route}) => {
@@ -113,7 +113,7 @@ const AddUserRelative = ( {navigation, route}) => {
             />
             {errorMessage !== '' && <Text style={styles.stackErrorMessageText}>{errorMessage}</Text>}
             <TagSelector
-                tags={["Aile", "Sevgili", "Arkadaş", "Özel Gün", "Diğer"]}
+                tags={tags}
                 selectedTags={selectedTags}
                 toggleTag={toggleTag}
                 showCustomTagInput={showCustomTagInput}
@@ -126,6 +126,7 @@ const AddUserRelative = ( {navigation, route}) => {
                 customTag={customTag}
                 setCustomTag={setCustomTag}
             />
+            <Text style={styles.cannotDeleteErrorMessageText}>{profileDeleteError}</Text>
             <TouchableOpacity
                 style={[styles.submitButton, { opacity: isButtonDisabled ? 0.5 : 1 }]}
                 disabled={isButtonDisabled || isLoading}
@@ -148,11 +149,10 @@ const styles = StyleSheet.create({
         padding: 20,
         justifyContent: 'center',
     },
-    stackErrorMessageText:{
+    cannotDeleteErrorMessageText:{
         color: 'red',
         marginTop: -5,
-        marginRight: 95,
-        fontSize: 10,
+        fontSize: 12,
         marginBottom: 10
       },
     title: {
@@ -162,6 +162,13 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         color: '#333',
     },
+    stackErrorMessageText:{
+        color: 'red',
+        marginTop: -5,
+        marginRight: 95,
+        fontSize: 15,
+        marginBottom: 10
+      },
     tagsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',

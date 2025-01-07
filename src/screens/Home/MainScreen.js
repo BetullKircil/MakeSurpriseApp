@@ -1,41 +1,66 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Loading from "../../components/common/Loading"
 import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { login, mainScreenWelcomeText, signup } from '@/scripts/enums';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import useAsyncStorage from '../../helper/useAsyncStorage';
 
 const MainScreen = ( {navigation} ) => {
   const [isLoading, setIsLoading] = useState(false);
-  return (
-    <View style={styles.container}>
-      {isLoading && <Loading />}
-      <Text style={styles.appTitleStyle}>
-        <Text style={styles.makeStyle}>Make</Text>
-        <Text style={styles.surpriseStyle}>Surprise</Text>
-      </Text>
-      
-      <Image
-        source={require('@/assets/images/mainScreenSurpriseBox.png')} 
-        style={styles.logo}
-      />
-      <Text style={styles.mainPageText}>{mainScreenWelcomeText}</Text>
+  const [isLoggedIn, setIsLoggedIn] = useState(null);
+  const [initialRoute, setInitialRoute] = useState(null);
 
-      <View style={styles.buttonContainer}>
-      <TouchableOpacity
-        style={styles.loginButton}
-        onPress={() => navigation.navigate('Login')}
-      >
-        <Text style={styles.buttonText}>{login}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.registerButton}
-        onPress={() => navigation.navigate('Signup')}
-      >
-        <Text style={styles.buttonText}>{signup}</Text>
-      </TouchableOpacity>
+  const { getData } = useAsyncStorage();
+
+  useEffect(() => {
+    
+    const checkUserSession = async () => {
+      const UserId = Number(await getData("userID"));
+      try {
+        const userToken = UserId; 
+        console.log("UserIdd:", UserId)
+        console.log("asil UserTokenn:", userToken)
+        if(userToken != "" && userToken != null){
+          navigation.navigate('HomePageScreen')
+        }
+      } catch (error) {
+        console.error("Oturum kontrolü sırasında hata:", error);
+      }
+    };
+    checkUserSession();
+  }, []);  // buraya extra kontrol eklenecek
+
+    return (
+      <View style={styles.container}>
+        {isLoading && <Loading />}
+        <Text style={styles.appTitleStyle}>
+          <Text style={styles.makeStyle}>Make</Text>
+          <Text style={styles.surpriseStyle}>Surprise</Text>
+        </Text>
+        
+        <Image
+          source={require('@/assets/images/mainScreenSurpriseBox.png')} 
+          style={styles.logo}
+        />
+        <Text style={styles.mainPageText}>{mainScreenWelcomeText}</Text>
+  
+        <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.loginButton}
+          onPress={() => navigation.navigate('Login')}
+        >
+          <Text style={styles.buttonText}>{login}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.registerButton}
+          onPress={() => navigation.navigate('Signup')}
+        >
+          <Text style={styles.buttonText}>{signup}</Text>
+        </TouchableOpacity>
+        </View>
       </View>
-    </View>
-  );
-}
+    );
+  }
 
 export default MainScreen;
 const styles = StyleSheet.create({
