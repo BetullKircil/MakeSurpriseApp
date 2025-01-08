@@ -1,5 +1,5 @@
 import React from 'react'
-import {LoginScreen, SignupScreen, MainScreen, 
+import {LoginScreen, SignupScreen, MainScreen, ForgotPasswordScreen,
   HomePageScreen, CalendarScreen, UserCustomizeSurpriseScreen,
   MakeSurpriseForYourself, UserProfileScreen, UserProfileInfoScreen, 
   UserAddressInfoScreen, CargoTrackingScreen, EMailChangeScreen, 
@@ -19,6 +19,11 @@ const AuthStack = () => {
         <Stack.Screen 
           name="CalendarScreen" 
           component={CalendarScreen} 
+          options={{ headerShown: false }} 
+        /> 
+        <Stack.Screen 
+          name="ForgotPasswordScreen" 
+          component={ForgotPasswordScreen} 
           options={{ headerShown: false }} 
         />
         <Stack.Screen 

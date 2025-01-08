@@ -1,6 +1,7 @@
 import MainScreen from './Home/MainScreen'
 import SignupScreen from './Auth/SignupScreen'
-import LoginScreen from './Auth/LoginScreen'
+import ForgotPasswordScreen from './Auth/ForgotPasswordScreen'
+import LoginScreen from './Auth/LoginScreen' 
 import CalendarScreen from './UserSpecialDay/CalenderScreen'
 import HomePageScreen from './Home/HomePageScreen'
 import UserProfileScreen from './UserProfile/UserProfileScreen' 
@@ -23,6 +24,7 @@ export{
   SignupScreen,
   LoginScreen,
   CalendarScreen,
+  ForgotPasswordScreen,
   HomePageScreen,
   UserProfileInfoScreen,
   UserProfileScreen,

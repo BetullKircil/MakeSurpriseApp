@@ -24,6 +24,37 @@ const  HomeScreen = ({navigation}) =>{
     }
   };
 
+  async function resetPassword(){
+
+    navigation.navigate("ForgotPasswordScreen");
+  }
+
+  async function sendResetPasswordMailAsync(params) {
+    //userMaili al ona gore mail at
+
+    // try {
+    //   const response = await fetch(`${ipConfig}Auth/Login`, {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(requestData),
+    //   });
+
+    //   if (response.ok) {
+    //     const data = await response.json();
+    //     await storeData("userID", data.user.userId.toString());
+    //     navigation.navigate('HomePageScreen');
+    //   } else {
+    //     setErrorMessage(loginError);
+    //   }
+    // } catch (error) {
+    //   console.error("Hata oluştu:", error);
+    // } finally {
+    //   setIsLoading(false);
+    // }
+  }
+
   async function handleLogin() {
     setIsEmailTouched(true);
     const isEmailValid = emailRegex.test(email.trim()); 
@@ -92,7 +123,11 @@ const  HomeScreen = ({navigation}) =>{
             onChangeText={(value) => setPassword(value)}
           />
           {errorMessage !== '' && <Text style={styles.stackErrorMessageText}>{errorMessage}</Text>}
-          
+
+          <Text style={styles.resetPasswordText} onPress={() => resetPassword()}>
+            Şifremi Unuttum
+          </Text>
+
           <TouchableOpacity
             style={[styles.loginButton, { opacity: email && password ? 1 : 0.5 }]}
             onPress={handleLogin}
@@ -158,6 +193,14 @@ const styles = StyleSheet.create({
     color: '#42b3f5',
     marginBottom: -50,
     paddingHorizontal: 10
+  },
+  resetPasswordText:{
+    fontSize: 13,
+    fontWeight: 'medium',
+    color: 'red',
+    marginBottom: -50,
+    paddingHorizontal: 10,
+    textDecorationLine: "underline"
   },
   errorText: {
     color: 'red',
