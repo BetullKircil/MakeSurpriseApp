@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import BottomBarNavigation from "../../components/common/BottomBarNavigation";
 import BrandCarousel from '../../components/Home/BrandCarousel';
@@ -7,14 +7,50 @@ import {homePageSurpriseForLovedOnes} from "../../../scripts/enums"
 import {homePageSurpriseForYourself} from "../../../scripts/enums"
 import {appNameFirstPart} from "../../../scripts/enums"
 import {appNameSecondPart} from "../../../scripts/enums"
+import * as SignalR from '@microsoft/signalr';
+import {ipConfig} from "../../../scripts/enums"
+
 
 const HomePageScreen = ({ navigation }) => {
   const [selectedMenu, setSelectedMenu] = useState("home");
+  const [notification, setNotification] = useState(null);
+
 
   const handleNavigation = (menu) => {
     setSelectedMenu(menu); 
     navigation.navigate(menu);
   };
+
+  useEffect(() => {
+    const connection = new SignalR.HubConnectionBuilder()
+      .withUrl(`${ipConfig}specialDaysHub`)  
+      .configureLogging(SignalR.LogLevel.Information)
+      .build();
+    connection.on("receiveNotification", (message) => {
+      console.log('Notification:', message);
+      alert(message);
+      setNotification(message); 
+    });
+
+    connection.start()
+      .then(() => {
+        console.log("SignalR Connected");
+      })
+      .catch((err) => {
+        console.log("SignalR Connection Error: ", err);
+        setTimeout(() => connection.start().catch(err => console.log("SignalR Retry Error: ", err)), 1000);
+      });
+    connection.onclose(() => {
+      console.log('SignalR bağlantısı kesildi. Yeniden bağlanıyor...');
+      setTimeout(() => {
+        connection.start().catch(err => console.log('SignalR Reconnect Error: ', err));
+      }, 1000);
+    });
+    return () => {
+      connection.stop();
+    };
+
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -22,7 +58,6 @@ const HomePageScreen = ({ navigation }) => {
         <Text style={styles.makeStyle}>{appNameFirstPart}</Text>
         <Text style={styles.surpriseStyle}>{appNameSecondPart}</Text>
       </Text>
-
       <View style={styles.scrollableContainer}>
         <BrandCarousel />
       </View>
@@ -67,6 +102,9 @@ const styles = StyleSheet.create({
     top: 0,
     alignSelf: "center",
     marginTop: 45,
+  },
+  deneme:{
+    color: "white"
   },
   makeStyle: {
     color: "#FFF",
