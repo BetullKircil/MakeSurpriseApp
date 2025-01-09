@@ -9,12 +9,14 @@ import {appNameFirstPart} from "../../../scripts/enums"
 import {appNameSecondPart} from "../../../scripts/enums"
 import * as SignalR from '@microsoft/signalr';
 import {ipConfig} from "../../../scripts/enums"
+import DirectOrdersScreen from '../../components/UserProfile/DirectOrdersScreen';
 
 
 const HomePageScreen = ({ navigation }) => {
   const [selectedMenu, setSelectedMenu] = useState("home");
   const [notification, setNotification] = useState(null);
-
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
+  const [specialDayTitle, setSpecialDayTitle] = useState("");
 
   const handleNavigation = (menu) => {
     setSelectedMenu(menu); 
@@ -27,8 +29,10 @@ const HomePageScreen = ({ navigation }) => {
       .configureLogging(SignalR.LogLevel.Information)
       .build();
     connection.on("receiveNotification", (message) => {
+      setSpecialDayTitle(message);
+      setLogoutModalVisible(true)
       console.log('Notification:', message);
-      alert(message);
+      // alert(message);
       setNotification(message); 
     });
 
@@ -44,7 +48,7 @@ const HomePageScreen = ({ navigation }) => {
       console.log('SignalR bağlantısı kesildi. Yeniden bağlanıyor...');
       setTimeout(() => {
         connection.start().catch(err => console.log('SignalR Reconnect Error: ', err));
-      }, 1000);
+      }, 50);
     });
     return () => {
       connection.stop();
@@ -83,6 +87,17 @@ const HomePageScreen = ({ navigation }) => {
           }
         />
       </View>
+      <DirectOrdersScreen
+        visible={logoutModalVisible}
+        specialDayTitle={specialDayTitle}
+        onCancel={() => setLogoutModalVisible(false)}
+        onConfirm={() => {
+          setLogoutModalVisible(false);
+          navigation.navigate("MakeSurpriseForYourLovedScreen", {
+            userRelativeType: false,
+          })
+        }}
+      />
       <BottomBarNavigation selectedMenu={selectedMenu} navigation={navigation} onNavigate={handleNavigation}/>
     </View>
   );

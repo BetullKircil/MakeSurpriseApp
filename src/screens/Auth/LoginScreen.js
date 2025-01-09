@@ -25,36 +25,8 @@ const  HomeScreen = ({navigation}) =>{
   };
 
   async function resetPassword(){
-
     navigation.navigate("ForgotPasswordScreen");
   }
-
-  async function sendResetPasswordMailAsync(params) {
-    //userMaili al ona gore mail at
-
-    // try {
-    //   const response = await fetch(`${ipConfig}Auth/Login`, {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(requestData),
-    //   });
-
-    //   if (response.ok) {
-    //     const data = await response.json();
-    //     await storeData("userID", data.user.userId.toString());
-    //     navigation.navigate('HomePageScreen');
-    //   } else {
-    //     setErrorMessage(loginError);
-    //   }
-    // } catch (error) {
-    //   console.error("Hata oluştu:", error);
-    // } finally {
-    //   setIsLoading(false);
-    // }
-  }
-
   async function handleLogin() {
     setIsEmailTouched(true);
     const isEmailValid = emailRegex.test(email.trim()); 
