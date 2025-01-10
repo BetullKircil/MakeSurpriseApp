@@ -2,7 +2,9 @@ import React, {useState} from 'react';
 import { Image, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {invalidMailError, ipConfig, loginError, signup} from "../../../scripts/enums"
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, ScrollView,
+  KeyboardAvoidingView,
+  Platform, } from 'react-native';
 
 
 const  HomeScreen = ({navigation}) =>{
@@ -68,7 +70,15 @@ const  HomeScreen = ({navigation}) =>{
     }
   };
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+    style={{ flex: 1 }}
+    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+  >
+    <ScrollView
+      contentContainerStyle={styles.scrollContainer}
+      keyboardShouldPersistTaps="handled"
+    >
+      <View style={styles.container}>
       {isLoading ? (
         <View style={styles.spinnerContainer}>
           <ActivityIndicator size="large" color="#0000ff" />
@@ -117,6 +127,8 @@ const  HomeScreen = ({navigation}) =>{
         </>
       )}
     </View>
+    </ScrollView>
+  </KeyboardAvoidingView>
   );
 };
 
@@ -125,10 +137,14 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#eedaf0',
+    backgroundColor: '#f7f7f7',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 16,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
   },
   logo: {
     width: 150,
@@ -157,12 +173,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontStyle: 'italic',
     marginBottom: 20,
-    color: '#8A2BE2'
+    color: "#7B1FA2",
   },
   registerText:{
     fontSize: 15,
     fontWeight: 'bold',
     color: '#42b3f5',
+    color: "#7B1FA2",
     marginBottom: -50,
     paddingHorizontal: 10
   },
@@ -196,9 +213,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#ccc', 
   },
   loginButton: {
-    backgroundColor: '#8A2BE2',
+    backgroundColor: '#7B1FA2',
     padding: 10,
-    borderRadius: 18,
+    borderRadius: 10,
     marginRight: 10,
     width: '85%',
     alignItems: 'center',
@@ -207,6 +224,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 16,
+    fontWeight: "bold"
   },
   input: {
     width: '80%',

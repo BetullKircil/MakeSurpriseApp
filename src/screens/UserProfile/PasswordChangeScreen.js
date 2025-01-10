@@ -1,38 +1,35 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Modal, Button, KeyboardAvoidingView, Platform } from 'react-native';
 import useAsyncStorage from '../../helper/useAsyncStorage';
-import {ipConfig} from "../../../scripts/enums"
+import { ipConfig } from "../../../scripts/enums";
 
-const PasswordChangeScreen = ({navigation}) => {
+const PasswordChangeScreen = ({ navigation }) => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [passwordAgain, setPasswordAgain] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
   const [isEditingCurrentPassword, setIsEditingCurrentPassword] = useState(false);
   const [firstNameIcon, setFirstNameIcon] = useState(require('@/assets/images/noEdit.png'));
-
   const [isEditingNewPassword, setIsEditingNewPassword] = useState(false);
   const [lastNameIcon, setLastNameIcon] = useState(require('@/assets/images/noEdit.png'));
-
   const [isEditingPasswordAgain, setIsEditingPasswordAgain] = useState(false);
   const [phoneNumberIcon, setPhoneNumberIcon] = useState(require('@/assets/images/noEdit.png'));
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(true);
 
   const { getData } = useAsyncStorage();
 
-  async function changePassword(){
-      const userId = Number(await getData("userID"));
-      const response = await fetch(`${ipConfig}UserProfile/ChangePassword`, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({UserId: userId, OldPassword: currentPassword, NewPassword: newPassword})
-      })
-      if(response.ok){
-        const data = await response.json();
-        alert('Değişiklikler kaydedildi!');
-      }
+  async function changePassword() {
+    const userId = Number(await getData("userID"));
+    const response = await fetch(`${ipConfig}UserProfile/ChangePassword`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ UserId: userId, OldPassword: currentPassword, NewPassword: newPassword })
+    });
+    if (response.ok) {
+      const data = await response.json();
+      alert('Değişiklikler kaydedildi!');
+    }
   }
 
   const handleEditCurrentPassword = () => {
@@ -74,72 +71,73 @@ const PasswordChangeScreen = ({navigation}) => {
     >
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerText}> Şifre Değişikliği </Text>
+          <Text style={styles.headerText}>Şifre Değişikliği</Text>
         </View>
-        <Text style={[styles.label, styles.boldLabel]}>Mevcut Şifre :</Text>
-        <View style={styles.inputContainer}>
-          
-          <TextInput
-            style={styles.input}
-            placeholder="Mevcut Şifrenizi Girin"
-            value={currentPassword}
-            secureTextEntry={!showPassword} 
-            onChangeText={setCurrentPassword}
-            editable={isEditingCurrentPassword}
-          />
-          <TouchableOpacity
-            style={styles.editIcon}
-            onPress={handleEditCurrentPassword}
-          >
-            <Image
-              source={firstNameIcon}
-              style={styles.editInfoIcons}
+        <View style={styles.formContainer}>
+          <Text style={styles.label}>Mevcut Şifre:</Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Mevcut Şifrenizi Girin"
+              value={currentPassword}
+              secureTextEntry={!showPassword}
+              onChangeText={setCurrentPassword}
+              editable={isEditingCurrentPassword}
             />
-          </TouchableOpacity>
-        </View>
-        <Text style={[styles.label, styles.boldLabel]}>Yeni Şifre :</Text>
-        <View style={styles.inputContainer}>
-          
-          <TextInput
-            style={styles.input}
-            value={newPassword}
-            secureTextEntry={!showPassword} 
-            placeholder="Yeni Şifrenizi Girin"
-            onChangeText={setNewPassword}
-            editable={isEditingNewPassword}
-          />
-          <TouchableOpacity
-            style={styles.editIcon}
-            onPress={handleEditNewPassword}
-          >
-            <Image
-              source={lastNameIcon}
-              style={styles.editInfoIcons}
+            <TouchableOpacity
+              style={styles.editIcon}
+              onPress={handleEditCurrentPassword}
+            >
+              <Image
+                source={firstNameIcon}
+                style={styles.editInfoIcons}
+              />
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.label}>Yeni Şifre:</Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              value={newPassword}
+              secureTextEntry={!showPassword}
+              placeholder="Yeni Şifrenizi Girin"
+              onChangeText={setNewPassword}
+              editable={isEditingNewPassword}
             />
-          </TouchableOpacity>
-        </View>
-        <Text style={[styles.label, styles.boldLabel]}>Yeni Şifre(Tekrar) :</Text>
-        <View style={styles.inputContainer}>
-          
-          <TextInput
-            style={styles.input}
-            placeholder="Yeni Şİfrenizi Tekrar Girin"
-            value={passwordAgain}
-            secureTextEntry={!showPassword} 
-            onChangeText={setPasswordAgain}
-            // keyboardType="phone-pad"
-            editable={isEditingPasswordAgain}
-          />
-          <TouchableOpacity
-            style={styles.editIcon}
-            onPress={handleEditPasswordAgain}
-          >
-            <Image
-              source={phoneNumberIcon}
-              style={styles.editInfoIcons}
+            <TouchableOpacity
+              style={styles.editIcon}
+              onPress={handleEditNewPassword}
+            >
+              <Image
+                source={lastNameIcon}
+                style={styles.editInfoIcons}
+              />
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.label}>Yeni Şifre(Tekrar):</Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Yeni Şifrenizi Tekrar Girin"
+              value={passwordAgain}
+              secureTextEntry={!showPassword}
+              onChangeText={setPasswordAgain}
+              editable={isEditingPasswordAgain}
             />
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.editIcon}
+              onPress={handleEditPasswordAgain}
+            >
+              <Image
+                source={phoneNumberIcon}
+                style={styles.editInfoIcons}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
+
         <TouchableOpacity
           style={[styles.saveButton, isSaveButtonDisabled && styles.disabledButton]}
           onPress={handleSaveChanges}
@@ -173,24 +171,68 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#eedaf0',
+    backgroundColor: '#F5F5F5',
   },
   header: {
-    backgroundColor: '#d9a4f7',
-    padding: 15,
-    borderRadius: 10,
+    padding: 20,
+    borderRadius: 15,
     alignItems: 'center',
-    marginBottom: 70,
+    marginBottom: 40,
   },
   headerText: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
+    color: '#7B1FA2',
+  },
+  formContainer: {
+    marginBottom: 30,
+  },
+  label: {
+    fontSize: 16,
     color: '#333',
+    marginBottom: 10,
+    fontWeight: '600',
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF',
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    marginBottom: 15,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 2,
+  },
+  input: {
+    flex: 1,
+    fontSize: 16,
+    color: '#333',
+  },
+  editIcon: {
+    marginLeft: 10,
+  },
+  editInfoIcons: {
+    width: 20,
+    height: 20,
+  },
+  saveButton: {
+    backgroundColor: "#7B1FA2",
+    paddingVertical: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  saveButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   disabledButton: {
     backgroundColor: '#CCCCCC',
   },
-  boldLabel: { fontWeight: 'bold' }, 
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -200,61 +242,23 @@ const styles = StyleSheet.create({
   modalContent: {
     width: 300,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFF',
     borderRadius: 10,
     alignItems: 'center',
   },
-  modalTitle: { fontSize: 18, fontWeight: 'bold' },
-  modalText: { fontSize: 16, marginBottom: 20 },
-  modalButtons: { flexDirection: 'row', justifyContent: 'space-evenly', width: '100%', paddingHorizontal: 20 },
-  profileImage: {
-    width: 200,
-    height: 200,
-    borderRadius: 10,
-    alignSelf: 'center',
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  modalText: {
+    fontSize: 16,
     marginBottom: 20,
   },
-  editInfoIcons: {
-    width: 20,
-    height: 20,
-  },
-
-  inputContainer: {
+  modalButtons: {
     flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#e8bff0',
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 15,
-  },
-  label: {
-    fontSize: 16,
-    color: '#333',
-    marginLeft: 3,
-    width: '50%',
-  },
-
-  input: {
-    flex: 1,
-    fontSize: 16,
-    paddingVertical: 0,
-    color: '#333',
-  },
-  editIcon: {
-    marginLeft: 10,
-  },
-  saveButton: {
-    backgroundColor: '#ffa366',
-    paddingVertical: 12,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  saveButtonText: {
-    color: '#333',
-    fontSize: 16,
-    fontWeight: 'bold',
+    justifyContent: 'space-evenly',
+    width: '100%',
   },
 });
 
-export default PasswordChangeScreen
+export default PasswordChangeScreen;

@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import Loading from "../../components/common/Loading"
-import { Image, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, Text, TextInput, View, TouchableOpacity, ScrollView,
+  KeyboardAvoidingView,
+  Platform, } from 'react-native';
 import CheckBox from 'react-native-check-box'
 import {alreadyHaveAnAccount, invalidMailError, ipConfig, login, securityPolicy} from "../../../scripts/enums"
 
@@ -69,7 +71,15 @@ const SignupScreen = ({navigation}) => {
   
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.container}>
       <Text style={styles.title}>Kayıt</Text>
       {isLoading && <Loading />}
       <Image
@@ -124,6 +134,8 @@ const SignupScreen = ({navigation}) => {
         </Text>
       </View>
     </View>
+    </ScrollView>
+      </KeyboardAvoidingView>
   );
 };
 
@@ -230,6 +242,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
   },
   alreadyHaveAccountText: {
     marginLeft: 10,

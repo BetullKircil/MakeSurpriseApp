@@ -81,6 +81,7 @@ async function saveUserProfile(){
     setFirstName(data.firstName)
     setLastName(data.lastName)
     setPhoneNumber(data.phoneNumber)
+    getAllUserProfile()
     console.log("data: ", data)
   }
 }
@@ -109,6 +110,9 @@ async function saveUserProfile(){
   
   const handleSaveChanges = () => {
     setIsModalVisible(true);
+    setIsEditingFirstName(false);
+    setIsEditingLastName(false);
+    setIsEditingPhoneNumber(false);
   };
 
   const handleModalSave = () => {
@@ -130,7 +134,7 @@ async function saveUserProfile(){
       >
         <View style={styles.container}>
           <View style={styles.header}>
-            <Text style={styles.headerText}>👤 Kullanıcı Bilgilerim</Text>
+            <Text style={styles.headerText}>Kullanıcı Bilgilerim</Text>
           </View>
           <Image
             source={require('@/assets/images/changeProfileInfoGif.png')}
@@ -155,7 +159,7 @@ async function saveUserProfile(){
               />
             </TouchableOpacity>
           </View>
-          <Text style={[styles.label, styles.boldLabel]}>Soy Ad :</Text>
+          <Text style={[styles.label, styles.boldLabel]}>Soyad :</Text>
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
@@ -229,14 +233,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#eedaf0',
+    backgroundColor: '#f7f7f7',
   },
   header: {
-    backgroundColor: '#d9a4f7',
-    padding: 15,
-    borderRadius: 10,
+    padding: 20,
+    borderRadius: 15,
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 25,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
   },
   stackErrorMessageText:{
     color: 'red',
@@ -248,7 +255,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#7B1FA2',
   },
   disabledButton: {
     backgroundColor: '#CCCCCC',
@@ -270,9 +277,10 @@ const styles = StyleSheet.create({
   modalTitle: { fontSize: 18, fontWeight: 'bold' },
   modalText: { fontSize: 16, marginBottom: 20 },
   modalButtons: { flexDirection: 'row', justifyContent: 'space-evenly', width: '100%', paddingHorizontal: 20 },
+  
   profileImage: {
-    width: 200,
-    height: 200,
+    width: 150,
+    height: 150,
     borderRadius: 10,
     alignSelf: 'center',
     marginBottom: 20,
@@ -285,35 +293,45 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#e8bff0',
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 15,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 18,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   label: {
     fontSize: 16,
     color: '#333',
-    marginLeft: 3,
-    width: '50%',
+    fontWeight: '500',
   },
   input: {
     flex: 1,
     fontSize: 16,
-    paddingVertical: 0,
     color: '#333',
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    height: 40,
   },
   editIcon: {
     marginLeft: 10,
   },
   saveButton: {
-    backgroundColor: '#ffa366',
-    paddingVertical: 12,
-    borderRadius: 10,
+    backgroundColor: "#7B1FA2",
+    paddingVertical: 14,
+    borderRadius: 5,
+    elevation: 5,
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 30,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   saveButtonText: {
-    color: '#333',
+    color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
   },

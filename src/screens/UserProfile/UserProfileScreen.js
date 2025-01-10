@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Modal } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Modal, TextInput } from 'react-native';
 import BottomBarNavigation from "../../components/common/BottomBarNavigation";
 import userInfoIcon from '@/assets/images/userInfo.png';
 import locationNotebookIcon from '@/assets/images/locationNotebook.png';
@@ -12,10 +12,10 @@ import logoutIcon from '@/assets/images/logout.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import useAsyncStorage from '../../helper/useAsyncStorage';
 
-
 const UserProfileScreen = ({ navigation }) => {
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState('profile');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const menuItems = [
     { label: 'Kullanıcı Bilgilerim', icon: userInfoIcon, screen: 'UserProfileInfoScreen' },
@@ -42,22 +42,29 @@ const UserProfileScreen = ({ navigation }) => {
       console.error("Çıkış işlemi sırasında hata oluştu:", error);
     }
   };
-  
-  
 
   const handleMenuActivity = (menu) => {
     setSelectedMenu(menu);
     navigation.navigate(menu);
   };
 
+  const filteredMenuItems = menuItems.filter(item =>
+    item.label.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Image source={require('@/assets/images/wallet.png')} style={styles.icon} />
       </View>
-
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Menüde Ara..."
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+      />
       <View style={styles.menuContainer}>
-        {menuItems.map((item, index) => (
+        {filteredMenuItems.map((item, index) => (
           <MenuItem
             key={index}
             label={`${item.label} >`}
@@ -91,82 +98,31 @@ export default UserProfileScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#eedaf0',
+    backgroundColor: '#ffffff',
     alignItems: 'center',
     paddingTop: 40,
   },
-  modalOverlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContainer: {
-    width: 300,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 20,
-    alignItems: 'center',
-  },
-  modalTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 10 },
-  modalMessage: { fontSize: 14, textAlign: 'center', marginBottom: 20 },
-  modalButtons: { flexDirection: 'row', justifyContent: 'space-between', width: '100%' },
-  modalButton: {
-    flex: 1,
-    paddingVertical: 10,
-    marginHorizontal: 5,
-    backgroundColor: '#ddd',
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  confirmButton: { backgroundColor: '#f00' },
-  modalButtonText: { color: 'white', fontWeight: 'bold' },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '90%',
     marginBottom: 20,
-    marginTop: 30
+    marginTop: 20,
   },
-  profileContainer: {
-    alignItems: 'center',
-  },
-  profileName: {
-    marginTop: 10,
-    fontWeight: 'bold',
-    fontSize: 16,
-    color: '#333',
-  },
-  walletContainer: {
-    alignItems: 'center',
-  },
-  walletTextContainer: {
-    flexDirection: 'row'
-  },
-  walletText: {
-    fontSize: 14,
-    color: '#333',
-    marginTop: 5,
-  },
-  walletBalance: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  balanceButton: {
-    backgroundColor: '#ff66b2',
-    borderRadius: 8,
-    paddingVertical: 5,
+  searchInput: {
+    width: '90%',
+    height: 50,
+    backgroundColor: '#f7f5f8',
+    borderRadius: 15,
     paddingHorizontal: 10,
-    flexDirection: 'row',
-    marginTop: 5,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 14,
+    marginBottom: 20,
+    fontSize: 16,
+    borderColor: '#ccc',
+    borderWidth: 1,
   },
   menuContainer: {
     width: '90%',
+    
   },
   menuItem: {
     backgroundColor: '#ffb3ff',
@@ -180,20 +136,10 @@ const styles = StyleSheet.create({
   menuText: {
     fontSize: 16,
     color: '#333',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   icon: {
-    width: 50,
-    height: 50,
-  },
-  menuIcon: {
-    width: 30,
-    height: 30,
-  },
-  budgetIcon: {
-    width: 25,
-    height: 25,
-    marginLeft: 5,
+    width: 70,
+    height: 70,
   },
 });
-

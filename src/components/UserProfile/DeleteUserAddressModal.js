@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
   },
-  confirmButton: { backgroundColor: '#f00' },
+  confirmButton: {backgroundColor: "#8A2BE2", },
   modalButtonText: { color: 'white', fontWeight: 'bold' },
 });
 

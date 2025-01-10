@@ -142,13 +142,6 @@ const UserAddressInfoScreen = ({navigation}) => {
       <View style={styles.header}>
         <Text style={styles.headerText}>Adres Defterim</Text>
       </View>
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => setModalVisible(true)}
-        >
-          <Text style={styles.addButtonText}>Yeni Adres Ekle +</Text>
-        </TouchableOpacity>
-
       <FlatList
       style={styles.addressContainer}
         data={addresses}
@@ -172,6 +165,12 @@ const UserAddressInfoScreen = ({navigation}) => {
           </View>
         )}
       />
+      <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => setModalVisible(true)}
+        >
+          <Text style={styles.addButtonText}>Yeni Adres Ekle +</Text>
+        </TouchableOpacity>
       <DeleteUserAddressModal
         visible={logoutModalVisible}
         addressId={addressId}
@@ -276,25 +275,23 @@ const UserAddressInfoScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#eedaf0',
+    backgroundColor: '#ffffff',
     padding: 20,
   },
   header: {
-    backgroundColor: '#d9a4f7',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
-    marginBottom: 70,
   },
   headerText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#7B1FA2',
   },
   addButton: {
-    backgroundColor: '#8A2BE2',
+    backgroundColor: "#7B1FA2",
     paddingVertical: 15,
-    borderRadius: 5,
+    borderRadius: 8,
     alignItems: 'center',
   },
   addressContainer: {
@@ -303,12 +300,15 @@ const styles = StyleSheet.create({
   addButtonText: {
     color: "#fff",
     fontWeight: "bold",
+    fontSize: 16,
   },
   addressCard: {
-    backgroundColor: "#fff",
+    backgroundColor: '#e6e6fa',
     padding: 15,
-    borderRadius: 5,
-    marginBottom: 10,
+    shadowColor: '#000',
+    borderRadius: 8,
+    elevation: 5,
+    marginBottom: 25,
   },
   addressTitle: {
     fontSize: 18,
@@ -317,11 +317,11 @@ const styles = StyleSheet.create({
   },
   addressText: {
     fontSize: 14,
-    color: "#333",
+    color: "#666"
   },
   deleteButton: {
     marginTop: 10,
-    backgroundColor: "#FF5722",
+    backgroundColor: "#c21d1d",
     padding: 5,
     borderRadius: 5,
   },

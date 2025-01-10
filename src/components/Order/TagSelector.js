@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     selectedTag: {
-        backgroundColor: '#8A2BE2',
+        backgroundColor: '#7B1FA2',
     },
     tagText: {
         color: '#fff',

@@ -29,7 +29,22 @@ const CargoTrackingScreen = ({ navigation }) => {
 
   return (
     cargoData.length === 0 ? (
-      <Text style={styles.backButton}>{"←"} Kargo Takibi</Text>
+      <View style={styles.emptyContainer}>
+      <Image
+        source={require("@/assets/images/no-cargo.png")}
+        style={styles.emptyImage}
+      />
+      <Text style={styles.emptyTitle}>Kargo Bilgisi Bulunamadı</Text>
+      <Text style={styles.emptyDescription}>
+        Şu anda herhangi bir kargo bilgisi bulunmamaktadır. Lütfen daha sonra tekrar kontrol edin.
+      </Text>
+      <TouchableOpacity 
+        style={styles.goBackButton} 
+        onPress={() => navigation.navigate("HomePageScreen")}
+      >
+        <Text style={styles.goBackButtonText}>Ana Sayfaya Dön</Text>
+      </TouchableOpacity>
+    </View>
     ) : (
       <View style={styles.container}>
         <View style={styles.header}>
@@ -103,6 +118,42 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FDF2F8",
     padding: 16,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f9f9f9",
+    paddingHorizontal: 16,
+  },
+  emptyImage: {
+    width: 150,
+    height: 150,
+    marginBottom: 20,
+  },
+  emptyTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  emptyDescription: {
+    fontSize: 16,
+    color: "#666",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  goBackButton: {
+    backgroundColor: "#7B1FA2",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  goBackButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
   },
   header: {
     backgroundColor: "#FFB703",

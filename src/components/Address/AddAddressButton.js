@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     right: 10,
-    backgroundColor: '#8A2BE2',
+    backgroundColor: '#7B1FA2',
     padding: 10,
     borderRadius: 5,
     zIndex: 1,

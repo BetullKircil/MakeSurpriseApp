@@ -10,7 +10,7 @@ const MenuItem = ({ label, icon, onPress }) => (
 
 const styles = StyleSheet.create({
   menuItem: {
-    backgroundColor: '#ffb3ff',
+    backgroundColor: '#eedaf0',
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 10,

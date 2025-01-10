@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, BackHandler } from "react-native";
 import BottomBarNavigation from "../../components/common/BottomBarNavigation";
 import BrandCarousel from '../../components/Home/BrandCarousel';
 import OptionBox from '../../components/Home/OptionBox';
@@ -22,6 +22,19 @@ const HomePageScreen = ({ navigation }) => {
     setSelectedMenu(menu); 
     navigation.navigate(menu);
   };
+  useEffect(() => {
+      const handleBackPress = () => {
+        navigation.navigate('HomePageScreen');
+        return true; 
+      };
+  
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        handleBackPress
+      );
+  
+      return () => backHandler.remove();
+    }, [navigation]);
 
   useEffect(() => {
     const connection = new SignalR.HubConnectionBuilder()
@@ -32,7 +45,6 @@ const HomePageScreen = ({ navigation }) => {
       setSpecialDayTitle(message);
       setLogoutModalVisible(true)
       console.log('Notification:', message);
-      // alert(message);
       setNotification(message); 
     });
 
@@ -108,7 +120,7 @@ export default HomePageScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#eedaf0",
+    backgroundColor: "#f7f5f8",
   },
   appTitleStyle: {
     fontStyle: "italic",
@@ -122,12 +134,12 @@ const styles = StyleSheet.create({
     color: "white"
   },
   makeStyle: {
-    color: "#FFF",
+    color: "#D1C4E9",
     fontStyle: "italic",
     fontWeight: "bold",
   },
   surpriseStyle: {
-    color: "#8A2BE2",
+    color: "#7B1FA2",
     fontStyle: "italic",
     fontWeight: "bold",
   },
@@ -138,6 +150,7 @@ const styles = StyleSheet.create({
     marginVertical: 120,
     paddingHorizontal: 15,
     height: 100,
+    
   },
   optionStyle: {
     marginTop: 50,

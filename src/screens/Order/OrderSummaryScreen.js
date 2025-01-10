@@ -5,16 +5,23 @@ import AddressDropdown from '../../components/Address/AddressDropdown';
 import CustomCheckbox from '../../components/Order/CustomCheckbox';
 import AddAddressButton from '../../components/Address/AddAddressButton';
 import { createOrder, orderSummary } from '@/scripts/enums';
+import BottomBarNavigation from "../../components/common/BottomBarNavigation";
+
 
 
 const OrderSummaryScreen = () => {
   const [addresses, setAddresses] = useState([]);
+    const [selectedMenu, setSelectedMenu] = useState("shopping");
   const [selectedAddress, setSelectedAddress] = useState('');
   const [isChecked, setIsChecked] = useState(false);
   const [isFocus, setIsFocus] = useState(false);const isOrderButtonDisabled = !selectedAddress || !isChecked || !budget || !note;
 
 
   const navigation = useNavigation();
+  const handleNavigation = (menu) => {
+    setSelectedMenu(menu);
+    navigation.navigate(menu);
+  };
 
   useEffect(() => {
     // const fetchAddresses = async () => {
@@ -73,6 +80,13 @@ const OrderSummaryScreen = () => {
         disabled={isOrderButtonDisabled}>
         <Text style={styles.orderButtonText}>{createOrder}</Text>
     </TouchableOpacity>
+      <View style={styles.bottombarNavigation}>
+      <BottomBarNavigation
+        selectedMenu={selectedMenu}
+        navigation={navigation}
+        onNavigate={handleNavigation}
+      />
+      </View>
     </View>
   );
 };
@@ -85,16 +99,21 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#eedaf0',
+    backgroundColor: '#f7f7f7',
+  },
+  bottombarNavigation: {
+    width: 420,
+    marginBottom: -20
   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
     marginTop: 10,
+    color: "#7B1FA2",
   },
   summaryContainer: {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#e6e6fa',
     padding: 20,
     borderRadius: 10,
     marginTop: 20,
@@ -110,7 +129,7 @@ const styles = StyleSheet.create({
   },
   orderButton: {
     width: '100%',
-    backgroundColor: '#28a745',
+    backgroundColor: '#7B1FA2',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',

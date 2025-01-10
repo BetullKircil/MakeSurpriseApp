@@ -17,7 +17,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
     console.log("dogrulama kodu gonderilecek")
     setIsLoading(true);
     const requestData = {
-        ToMail: email, // Kullanıcı tarafından girilen e-posta adresi
+        ToMail: email, 
     };
     console.log("requestData: ", requestData)
     try {
@@ -121,10 +121,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
             NewPassword: newPassword,
         })
     });
-    console.log("istek atılıyor")
-    console.log("hata")
     if (response.ok) {
-        // const data = await response.json();
         alert('Şifreniz başarıyla değiştirildi!');
         console.log("Şifre başarılı bir şekilde değiiştirildi")
         navigation.navigate('Login');
@@ -201,12 +198,13 @@ const ForgotPasswordScreen = ({ navigation }) => {
 const styles = {
 container: {
     flex: 1,
-    backgroundColor: '#eedaf0',
+    backgroundColor: '#f7f7f7',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 16,
     },
   title: {
+    color: "#7B1FA2",
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 150,
@@ -222,9 +220,9 @@ container: {
     backgroundColor: '#fff',
   },
   button: {
-    backgroundColor: 'blue',
+    backgroundColor: '#7B1FA2',
     padding: 10,
-    borderRadius: 15,
+    borderRadius: 10,
     width: '80%',
     alignItems: 'center',
     marginTop: 10

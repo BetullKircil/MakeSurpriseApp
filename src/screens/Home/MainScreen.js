@@ -28,7 +28,7 @@ const MainScreen = ( {navigation} ) => {
       }
     };
     checkUserSession();
-  }, []);  // buraya extra kontrol eklenecek
+  }, []);  
 
     return (
       <View style={styles.container}>
@@ -39,7 +39,7 @@ const MainScreen = ( {navigation} ) => {
         </Text>
         
         <Image
-          source={require('@/assets/images/mainScreenSurpriseBox.png')} 
+          source={require('@/assets/images/givePresentByHand.png')} 
           style={styles.logo}
         />
         <Text style={styles.mainPageText}>{mainScreenWelcomeText}</Text>
@@ -49,13 +49,13 @@ const MainScreen = ( {navigation} ) => {
           style={styles.loginButton}
           onPress={() => navigation.navigate('Login')}
         >
-          <Text style={styles.buttonText}>{login}</Text>
+          <Text style={styles.loginButtonText}>{login}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.registerButton}
           onPress={() => navigation.navigate('Signup')}
         >
-          <Text style={styles.buttonText}>{signup}</Text>
+          <Text style={styles.signupButtonText}>{signup}</Text>
         </TouchableOpacity>
         </View>
       </View>
@@ -66,7 +66,7 @@ export default MainScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#eedaf0',
+    backgroundColor: '#f7f7f7',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 16,
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   loginButton: {
     // backgroundColor: '#8A2BE2',
     padding: 10,
-    borderRadius: 20,
+    borderRadius: 12,
     marginRight: 10,
     width: '85%',
     alignItems: 'center',
@@ -102,31 +102,36 @@ const styles = StyleSheet.create({
     borderColor: '#8A2BE2',
   },
   registerButton: {
-    backgroundColor: '#8A2BE2',
+    backgroundColor: '#7B1FA2',
     padding: 10,
-    borderRadius: 18,
+    borderRadius: 10,
     marginRight: 10,
     width: '85%',
     alignItems: 'center',
     marginTop: 20,
   },
   makeStyle: {
-    color: '#fff', 
-    fontStyle: 'italic',
-    fontWeight: 'bold'
+    color: "#D1C4E9",
+    fontStyle: "italic",
+    fontWeight: "bold",
   },
   surpriseStyle: {
-    color: '#8A2BE2', 
-    fontStyle: 'italic',
+    color: "#7B1FA2",
+    fontStyle: "italic",
+    fontWeight: "bold",
+  },
+  loginButtonText: {
+    color: "#7B1FA2",
+    fontSize: 16,
     fontWeight: 'bold'
   },
-  buttonText: {
-    color: '#fff',
+  signupButtonText: {
+    color: "#fff",
     fontSize: 16,
     fontWeight: 'bold'
   },
   mainPageText: {
-    color: '#b54bdb',
+    color: "#7B1FA2",
     fontSize: 25,
     fontWeight: 'bold',
     paddingHorizontal: 30,

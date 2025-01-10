@@ -16,9 +16,10 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
+    elevation: 10,
     padding: 15,
     marginBottom: 10,
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: "#8A2BE2",
     borderRadius: 10,
     backgroundColor: "#fff",
@@ -29,7 +30,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   text: {
-    color: "#8A2BE2",
+    color: "#7B1FA2",
     fontWeight: "bold",
     fontSize: 15,
     flexShrink: 1,

@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { FlatList, View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { FlatList, View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 
 const CalenderEventList = ({ events, onDelete }) => {
   return (
@@ -16,7 +16,10 @@ const CalenderEventList = ({ events, onDelete }) => {
               onPress={() => onDelete(item.id)}
               style={styles.deleteButton}
             >
-              <Text style={styles.deleteButtonText}>Sil</Text>
+              <Image
+                  source={require('@/assets/images/delete-special-day-icon.png')}
+                  style={styles.navIconProfile}
+                  />
             </TouchableOpacity>
           </View>
         )}
@@ -30,9 +33,13 @@ export default memo(CalenderEventList);
 const styles = StyleSheet.create({
   eventsList: {
     flex: 1,
-    marginTop: 20,
+    marginTop: 40,
     paddingHorizontal: 20,
     paddingBottom: 80,
+  },
+  navIconProfile: {
+    width: 25,
+    height: 25,
   },
   eventsTitle: {
     fontSize: 16,
@@ -49,7 +56,7 @@ const styles = StyleSheet.create({
   },
   eventDate: {
     fontSize: 14,
-    color: "#333",
+    color: "#7B1FA2",
   },
   eventTitle: {
     fontSize: 14,
@@ -57,7 +64,6 @@ const styles = StyleSheet.create({
     color: "#555",
   },
   deleteButton: {
-    backgroundColor: "red",
     paddingVertical: 2,
     paddingHorizontal: 8,
     borderRadius: 5,
