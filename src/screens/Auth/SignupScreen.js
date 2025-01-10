@@ -145,7 +145,7 @@ export default SignupScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#eedaf0',
+    backgroundColor: '#f7f7f7',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 16,
@@ -182,12 +182,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontStyle: 'italic',
     marginBottom: 20,
-    color: '#8A2BE2'
+    color: '#7B1FA2'
   },
   registerText:{
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#42b3f5',
+    color: '#7B1FA2',
     marginBottom: -50,
     paddingHorizontal: 10
   },
@@ -206,9 +206,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#ccc', 
   },
   registerButton: {
-    backgroundColor: '#8A2BE2',
+    backgroundColor: '#7B1FA2',
     padding: 10,
-    borderRadius: 18,
+    borderRadius: 13,
     marginRight: 10,
     width: '85%',
     alignItems: 'center',
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   policyText: {
-    color: '#fff',
+    color: '#000',
     fontSize: 13,
   },
   input: {
