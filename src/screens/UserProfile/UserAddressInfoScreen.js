@@ -171,15 +171,15 @@ const UserAddressInfoScreen = ({navigation}) => {
         >
           <Text style={styles.addButtonText}>Yeni Adres Ekle +</Text>
         </TouchableOpacity>
-      <DeleteUserAddressModal
-        visible={logoutModalVisible}
-        addressId={addressId}
-        onCancel={() => setLogoutModalVisible(false)}
-        onConfirm={() => {
-          setLogoutModalVisible(false);
-          deleteAddress(addressId);
-        }}
-      />
+          <DeleteUserAddressModal
+            visible={logoutModalVisible}
+            addressId={addressId}
+            onCancel={() => setLogoutModalVisible(false)}
+            onConfirm={() => {
+              setLogoutModalVisible(false);
+              deleteAddress(addressId);
+            }}
+          />
       <Modal visible={isModalVisible} transparent={true} animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>

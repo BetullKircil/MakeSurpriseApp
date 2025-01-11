@@ -22,7 +22,7 @@ const AddressDropdown = ({ addresses, selectedAddress, onAddressChange }) => {
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
         onChange={item => {
-          onAddressChange(item.id);
+          onAddressChange(item.value);
           setIsFocus(false);
         }}
       />
