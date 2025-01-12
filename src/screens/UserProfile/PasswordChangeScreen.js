@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Modal, Button, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Modal, Button, KeyboardAvoidingView, Platform, BackHandler } from 'react-native';
 import useAsyncStorage from '../../helper/useAsyncStorage';
 import { ipConfig } from "../../../scripts/enums";
 
@@ -19,6 +19,20 @@ const PasswordChangeScreen = ({ navigation }) => {
 
   const { getData } = useAsyncStorage();
 
+  useEffect(() => {
+          const handleBackPress = () => {
+            navigation.navigate('UserProfileScreen');
+            return true; 
+          };
+      
+          const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            handleBackPress
+          );
+      
+          return () => backHandler.remove();
+        }, [navigation]);
+
   async function changePassword() {
     const userId = Number(await getData("userID"));
     const response = await fetch(`${ipConfig}UserProfile/ChangePassword`, {
@@ -26,9 +40,13 @@ const PasswordChangeScreen = ({ navigation }) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ UserId: userId, OldPassword: currentPassword, NewPassword: newPassword })
     });
-    if (response.ok) {
-      const data = await response.json();
-      alert('Değişiklikler kaydedildi!');
+    console.log(response.status); 
+    if (response.status == 200) {
+      alert('Şifreniz değiştirildi!');
+      navigation.navigate("UserProfileScreen")
+    }
+    else{
+      alert('Eski şifre ve yeni şifre alanlarını doğru bir şekilde doldurunuz!');
     }
   }
 

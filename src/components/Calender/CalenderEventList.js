@@ -33,7 +33,7 @@ export default memo(CalenderEventList);
 const styles = StyleSheet.create({
   eventsList: {
     flex: 1,
-    marginTop: 40,
+    marginTop: 65,
     paddingHorizontal: 20,
     paddingBottom: 80,
   },

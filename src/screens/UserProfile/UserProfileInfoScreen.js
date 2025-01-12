@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Modal, Button, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Modal, Button, KeyboardAvoidingView, Platform, ScrollView, BackHandler } from 'react-native';
 import useAsyncStorage from '../../helper/useAsyncStorage';
 import {ipConfig, phoneNumberFormatError} from "../../../scripts/enums"
 
@@ -21,6 +21,20 @@ const UserProfileInfoScreen = ({ navigation }) => {
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(true);
 
   const { getData } = useAsyncStorage();
+
+  useEffect(() => {
+      const handleBackPress = () => {
+        navigation.navigate('UserProfileScreen');
+        return true; 
+      };
+  
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        handleBackPress
+      );
+  
+      return () => backHandler.remove();
+    }, [navigation]);
 
   const changePhoneNumberHandle = (value) => {
     let rawValue = value.replace(/\D/g, "");
@@ -119,6 +133,7 @@ async function saveUserProfile(){
     saveUserProfile();
     setIsModalVisible(false);
     alert('Değişiklikler kaydedildi!');
+    navigation.navigate("UserProfileScreen")
   };
 
   const handleModalCancel = () => {

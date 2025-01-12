@@ -7,6 +7,7 @@ import {
   TextInput,
   FlatList,
   TouchableOpacity,
+  BackHandler
 } from "react-native";
 import CalendarPicker from "react-native-calendar-picker";
 import BottomBarNavigation from "../../components/common/BottomBarNavigation";
@@ -43,10 +44,10 @@ const CalenderScreen = ({ navigation }) => {
         });
         setEvents(specialDateArray);
       } else {
-        console.error("Hata oluştu");
+        console.info("Henüz özel gün eklemediniz");
       }
     } catch (error) {
-      console.error("Hata oluştu:", error);
+      console.info("Henüz özel gün eklemediniz");
     } finally {
       setIsLoading(false);
     }
@@ -56,6 +57,20 @@ const CalenderScreen = ({ navigation }) => {
     setSelectedMenu(menu);
     navigation.navigate(menu);
   };
+
+  useEffect(() => {
+          const handleBackPress = () => {
+            navigation.navigate('HomePageScreen');
+            return true; 
+          };
+      
+          const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            handleBackPress
+          );
+      
+          return () => backHandler.remove();
+        }, [navigation]);
 
   useEffect(() => {
     getAllDates();

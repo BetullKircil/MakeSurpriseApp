@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, BackHandler } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import AddAddressButton from '../../components/Address/AddAddressButton';
 import ShoppingItem from '../../components/Order/ShoppingItem';
 import { createOrder, orderSummary } from '@/scripts/enums';
 import BottomBarNavigation from "../../components/common/BottomBarNavigation";
@@ -36,6 +35,20 @@ const OrderSummaryScreen = () => {
     fetchAddresses();
   }, []);
 
+  useEffect(() => {
+          const handleBackPress = () => {
+            navigation.navigate('HomePageScreen');
+            return true; 
+          };
+      
+          const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            handleBackPress
+          );
+      
+          return () => backHandler.remove();
+        }, [navigation]);
+
   const handleOrderUpdate = (newOrderItem, shoppingCartIdToRemove = null) => {
     if (newOrderItem) {
       setOrder((prev) => [...prev, newOrderItem]);
@@ -46,7 +59,6 @@ const OrderSummaryScreen = () => {
 
   const handleOrderCreation = async () => {
     const UserId = Number(await getData("userID"));
-
     if (order.length !== 0) {
       const response = await fetch(`${ipConfig}Shopping/FinalizeOrder`, {
         method: "POST",
@@ -56,6 +68,7 @@ const OrderSummaryScreen = () => {
           OrderItems: order,
         }),
       });
+      console.log(response.status);
       if (response.ok) {
         setShoppingList((prevShoppingList) =>
           prevShoppingList.filter(
@@ -66,28 +79,48 @@ const OrderSummaryScreen = () => {
           )
         );
         setOrder([]);
+        alert("Siparişiniz başarılı bir şekilde oluşturuldu!");
+        navigation.navigate("CargoTrackingScreen")
       }
     }
+  };
+
+  const addAddress = async () => {
+    navigation.navigate("UserAddressInfoScreen")
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>{orderSummary}</Text>
-      <FlatList
-        data={shoppingList}
-        renderItem={({ item }) => (
-          <ShoppingItem
-            item={item}
-            addressList={addressList}
-            onOrderUpdate={handleOrderUpdate}
-          />
-        )}
-        keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={styles.listContainer}
-      />
-      <TouchableOpacity style={styles.orderButton} onPress={handleOrderCreation}>
-        <Text style={styles.orderButtonText}>{createOrder}</Text>
-      </TouchableOpacity>
+      {shoppingList.length > 0 ? (
+        <FlatList
+          data={shoppingList}
+          renderItem={({ item }) => (
+            <ShoppingItem
+              item={item}
+              addressList={addressList}
+              onOrderUpdate={handleOrderUpdate}
+            />
+          )}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={styles.listContainer}
+        />
+      ) : (
+        <View style={styles.emptyListContainer}>
+          <Text style={styles.emptyListText}>Alışveriş listeniz boş</Text>
+        </View>
+      )}
+      <TouchableOpacity
+        style={[
+          styles.orderButton,
+          order.length === 0 && styles.orderButtonDisabled, 
+        ]}
+        onPress={handleOrderCreation}
+        disabled={order.length === 0} 
+      >
+  <Text style={styles.orderButtonText}>{createOrder}</Text>
+</TouchableOpacity>
+
       <BottomBarNavigation
         selectedMenu={selectedMenu}
         navigation={navigation}
@@ -104,12 +137,28 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f7f7f7',
   },
+  emptyListContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyListText: {
+    fontSize: 18,
+    color: '#888',
+    textAlign: 'center',
+  },
+  
   header: {
     fontSize: 24,
     fontWeight: 'bold',
     margin: 20,
     color: "#7B1FA2",
   },
+  orderButtonDisabled: {
+    backgroundColor: '#ccc', 
+    borderColor: '#999',
+  },
+  
   listContainer: {
     paddingHorizontal: 20,
     paddingBottom: 80,

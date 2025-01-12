@@ -14,12 +14,14 @@ const ForgotPasswordScreen = ({ navigation }) => {
   const [successMessage, setSuccessMessage] = useState('');
 
   const sendVerificationCode = async () => {
-    console.log("dogrulama kodu gonderilecek")
+    setErrorMessage('');
+    setSuccessMessage('');
+    console.log("dogrulama kodu gonderilecek");
     setIsLoading(true);
     const requestData = {
-        ToMail: email, 
+      ToMail: email,
     };
-    console.log("requestData: ", requestData)
+    console.log("requestData: ", requestData);
     try {
       const response = await fetch(`${ipConfig}Mail/SendVerificationCode`, {
         method: 'POST',
@@ -28,15 +30,16 @@ const ForgotPasswordScreen = ({ navigation }) => {
         },
         body: JSON.stringify(requestData),
       });
-      console.log("gonderiliyor")
+  
       if (response.ok) {
+        const data = await response.json();
         setIsEmailSent(true);
-        setSuccessMessage('Doğrulama kodu e-posta adresinize gönderildi.');
-        console.log("basarıyla gonderildi")
+        setSuccessMessage(data.message);
+        console.log("başarıyla gönderildi");
       } else {
         const data = await response.json();
         setErrorMessage(data.message || 'Bir hata oluştu.');
-        console.log("basarıyla gonderilmedi")
+        console.log("başarıyla gönderilmedi");
       }
     } catch (error) {
       setErrorMessage('Hata');
@@ -44,8 +47,11 @@ const ForgotPasswordScreen = ({ navigation }) => {
       setIsLoading(false);
     }
   };
+  
 
   const verifyCode = async () => {
+    setErrorMessage('');
+    setSuccessMessage('');
     setIsLoading(true);
     try {
       const response = await fetch(`${ipConfig}Mail/VerifyResetCode`, {
@@ -105,6 +111,8 @@ const ForgotPasswordScreen = ({ navigation }) => {
   };
 
   async function ResetPasswordAsync() {
+    setErrorMessage('');
+    setSuccessMessage('');
     console.log("sifre degistirmek icin girdi")
     if (newPassword !== confirmPassword) {
         setErrorMessage('Şifreler uyuşmuyor.');

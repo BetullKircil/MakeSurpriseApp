@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Image, BackHandler } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { ipConfig } from '../../../scripts/enums';
 import useAsyncStorage from '../../helper/useAsyncStorage';
@@ -24,6 +24,20 @@ const AnnouncementPreferencesScreen = ({ navigation }) => {
     }
     getSpecialDaysAnnounce();
   }, []);
+
+  useEffect(() => {
+          const handleBackPress = () => {
+            navigation.navigate('UserProfileScreen');
+            return true; 
+          };
+      
+          const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            handleBackPress
+          );
+      
+          return () => backHandler.remove();
+        }, [navigation]);
 
   const calculateDaysLeft = (specialDayDate) => {
     const today = new Date();

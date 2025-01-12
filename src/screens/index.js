@@ -18,6 +18,7 @@ import MakeSurpriseForYourself from './Home/MakeSurpriseForYourself'
 import MakeSurpriseForYourLovedScreen from './Home/MakeSurpriseForYourLovedScreen'
 import AddUserRelative from './UserProfile/AddUserRelative'
 import OrderSummaryScreen from './Order/OrderSummaryScreen'
+import ShoppingItem from '../components/Order/ShoppingItem'
 
 export{
   MainScreen,
@@ -29,6 +30,7 @@ export{
   UserProfileInfoScreen,
   UserProfileScreen,
   AddUserRelative,
+  ShoppingItem,
   OrderSummaryScreen,
   MakeSurpriseForYourself,
   MakeSurpriseForYourLovedScreen,

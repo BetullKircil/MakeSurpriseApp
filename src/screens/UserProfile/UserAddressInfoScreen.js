@@ -7,6 +7,7 @@ import {
   FlatList,
   Modal,
   StyleSheet,
+  BackHandler,
   Alert,
 } from "react-native";
 import { Dropdown } from 'react-native-element-dropdown';
@@ -45,6 +46,20 @@ const UserAddressInfoScreen = ({navigation}) => {
     details: "",
   });
   const { getData } = useAsyncStorage();
+
+  useEffect(() => {
+        const handleBackPress = () => {
+          navigation.navigate('UserProfileScreen');
+          return true; 
+        };
+    
+        const backHandler = BackHandler.addEventListener(
+          'hardwareBackPress',
+          handleBackPress
+        );
+    
+        return () => backHandler.remove();
+      }, [navigation]);
   
   const addAddress = async () => {
     if (
@@ -142,29 +157,38 @@ const UserAddressInfoScreen = ({navigation}) => {
       <View style={styles.header}>
         <Text style={styles.headerText}>Adres Defterim</Text>
       </View>
-      <FlatList
-      style={styles.addressContainer}
-        data={addresses}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item, index }) => (
-          <View style={styles.addressCard}>
-            <Text style={styles.addressTitle}>{item.addressTag}</Text>
-            <Text style={styles.addressText}>{item.sehirAdi + " / " + item.ilceAdi}</Text>
-            <Text style={styles.addressText}>{item.fullAddress}</Text>
-            <TouchableOpacity
-              style={styles.deleteButton}
-              // onPress={() => deleteAddress(item.addressId)}
-              onPress={() => {
-                setLogoutModalVisible(true)
-                setAddressIdToDelete(item.addressId)
-                }    
-              }
-            >
-              <Text style={styles.deleteButtonText}>Sil</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      />
+        <FlatList
+          style={styles.addressContainer}
+          data={addresses}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item, index }) => (
+            <View style={styles.addressCard}>
+              {/* Adres Başlığı */}
+              <View style={styles.addressHeader}>
+                <Text style={styles.addressTitle}>{item.addressTag}</Text>
+              </View>
+
+              {/* Adres Detayları */}
+              <View style={styles.addressDetails}>
+                <Text style={styles.addressText}>
+                  {item.sehirAdi} / {item.ilceAdi}
+                </Text>
+                <Text style={styles.addressText}>{item.fullAddress}</Text>
+              </View>
+
+              {/* Silme Butonu */}
+              {/* <TouchableOpacity
+                style={styles.deleteButton}
+                onPress={() => {
+                  setLogoutModalVisible(true);
+                  setAddressIdToDelete(item.addressId);
+                }}
+              >
+                <Text style={styles.deleteButtonText}>Sil</Text>
+              </TouchableOpacity> */}
+            </View>
+          )}
+        />
       <TouchableOpacity
           style={styles.addButton}
           onPress={() => setModalVisible(true)}
@@ -295,7 +319,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   addressContainer: {
-    marginTop: 15
+    marginTop: 10,
+    paddingHorizontal: 10,
   },
   addButtonText: {
     color: "#fff",
@@ -303,21 +328,34 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   addressCard: {
-    backgroundColor: '#e6e6fa',
+    backgroundColor: '#fff',
+    borderRadius: 10,
     padding: 15,
-    shadowColor: '#000',
-    borderRadius: 8,
-    elevation: 5,
-    marginBottom: 25,
+    marginVertical: 10,
+    elevation: 5, 
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
   },
   addressTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 5,
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#7B1FA2', 
+  },
+  addressDetails: {
+    marginBottom: 10,
+  },
+  addressHeader: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+    paddingBottom: 8,
+    marginBottom: 10,
   },
   addressText: {
     fontSize: 14,
-    color: "#666"
+    color: '#424242',
+    marginVertical: 2,
   },
   deleteButton: {
     marginTop: 10,

@@ -23,6 +23,7 @@ const HomePageScreen = ({ navigation }) => {
     navigation.navigate(menu);
   };
   useEffect(() => {
+    console.log("logoutModalVisible: ", logoutModalVisible)
       const handleBackPress = () => {
         navigation.navigate('HomePageScreen');
         return true; 
@@ -37,17 +38,19 @@ const HomePageScreen = ({ navigation }) => {
     }, [navigation]);
 
   useEffect(() => {
+    console.log("logoutModalVisible: ", logoutModalVisible)
     const connection = new SignalR.HubConnectionBuilder()
       .withUrl(`${ipConfig}specialDaysHub`)  
       .configureLogging(SignalR.LogLevel.Information)
       .build();
     connection.on("receiveNotification", (message) => {
-      setSpecialDayTitle(message);
-      setLogoutModalVisible(true)
+      
+      if(!logoutModalVisible){
+        setSpecialDayTitle(message);
+        setLogoutModalVisible(true)
+      }
       console.log('Notification:', message);
-      setNotification(message); 
     });
-
     connection.start()
       .then(() => {
         console.log("SignalR Connected");
@@ -66,7 +69,7 @@ const HomePageScreen = ({ navigation }) => {
       connection.stop();
     };
 
-  }, []);
+  }, [logoutModalVisible]);
 
   return (
     <View style={styles.container}>
@@ -80,7 +83,7 @@ const HomePageScreen = ({ navigation }) => {
 
       <View style={styles.optionsContainer}>
         <OptionBox
-          text= {homePageSurpriseForLovedOnes.toUpperCase()}
+          text= {homePageSurpriseForLovedOnes}
           imageSource={require("@/assets/images/gift-to-sb.gif")}
           onPress={() =>
             navigation.navigate("MakeSurpriseForYourLovedScreen", {
@@ -90,7 +93,7 @@ const HomePageScreen = ({ navigation }) => {
         />
         <OptionBox
           style={styles.optionStyle}
-          text={homePageSurpriseForYourself.toUpperCase()}
+          text={homePageSurpriseForYourself}
           imageSource={require("@/assets/images/gift-yourself.gif")}
           onPress={() =>
             navigation.navigate("MakeSurpriseForYourself", {
@@ -105,7 +108,7 @@ const HomePageScreen = ({ navigation }) => {
         onCancel={() => setLogoutModalVisible(false)}
         onConfirm={() => {
           setLogoutModalVisible(false);
-          navigation.navigate("MakeSurpriseForYourLovedScreen", {
+          navigation.navigate("OrderSummaryScreen", {
             userRelativeType: false,
           })
         }}

@@ -40,7 +40,6 @@ const UserCustomizeSurpriseScreen = ({ navigation, route }) => {
 
   const handleNavigate = async () => {
     const UserId = Number(await getData("userID"));
-    // navigation.navigate('OrderSummaryScreen', { budget, note });
     const response = await fetch(`${ipConfig}Shopping/AddProduct` , 
     {
       method: 'POST',
@@ -128,7 +127,7 @@ export default UserCustomizeSurpriseScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#eedaf0',
+    backgroundColor: "#f7f5f8",
     paddingHorizontal: 25,
     paddingVertical: 30,
   },
@@ -201,7 +200,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   button: {
-    backgroundColor: '#8A2BE2',
+    backgroundColor: '#7B1FA2',
     paddingVertical: 15,
     borderRadius: 5,
     alignItems: 'center',
