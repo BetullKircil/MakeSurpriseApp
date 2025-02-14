@@ -22,6 +22,15 @@ Bu komut çalıştırıldığında aşağıdaki seçenekler sunulacaktır:
 Geliştirmeye başlamak için **app** klasöründeki dosyaları düzenleyebilirsiniz. Proje, [dosya tabanlı yönlendirme](https://docs.expo.dev/router/introduction) kullanmaktadır.
 
 ---
+Sürpriz Hediye Uygulaması – Özet
+
+Sürpriz Hediye Uygulaması, kullanıcıların hediye seçimi ve satın alma sürecini kolaylaştıran, zaman tasarrufu sağlayan ve alışveriş deneyimini eğlenceli hale getiren bir mobil platformdur. Uygulama, kullanıcıların belirlediği bütçe ve tercihler doğrultusunda kişiselleştirilmiş hediye önerileri sunar. Kullanıcılar, hediye alacakları kişiye dair kısa bir anketi doldurarak sistemin en uygun seçenekleri belirlemesini sağlar.
+
+Uygulamanın en dikkat çekici özelliği, sürpriz faktörünü ön planda tutmasıdır. Kullanıcı, hediye seçimini sistemin yapmasına izin vererek, kendisi de dahil olmak üzere hediyenin içeriğini bilmeksizin bir sipariş oluşturabilir. Böylece, hem hediye veren hem de alan kişi için alışveriş süreci gizemli ve heyecan verici bir deneyime dönüşür.
+
+Ayrıca uygulama, yaklaşan özel günler için hatırlatıcılar sunarak kullanıcıların hediye alma sürecini önceden planlamalarına yardımcı olur. Hediye seçiminde yaşanan kararsızlık, zaman kaybı ve bütçe planlama sorunlarına akıllı öneriler ve kullanıcı dostu bir arayüz ile çözüm sunar.
+
+Sürpriz Hediye Uygulaması, bireysel ve profesyonel bağlamda hediyeleşmeyi daha keyifli ve zahmetsiz hale getirerek, kullanıcılarına modern, pratik ve eğlenceli bir alışveriş deneyimi sunmayı amaçlamaktadır.
 
 ## 📱 Uygulama Ekranları
 
