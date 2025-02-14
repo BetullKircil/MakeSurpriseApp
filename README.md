@@ -46,11 +46,10 @@ Geliştirmeye başlamak için **app** klasöründeki dosyaları düzenleyebilirs
 | ![adres_sayfası](https://github.com/user-attachments/assets/8cd08bd0-0937-4f98-86f5-c26d05673b9b) | ![yeni_adres_ekleme](https://github.com/user-attachments/assets/26c2202e-ef6f-49fe-9a6f-e7f9cdbdfc6c) | ![kargo_takip](https://github.com/user-attachments/assets/74d1cc64-d2fc-4e62-ba8d-5597f4234485) |
 
 ### **Özel Gün & Anket Yönetimi**
-| Özel Gün Ekleme | Yaklaşan Özel Günler | Özel Gün Mail | Anket |
+| Özel Gün Ekleme | Yaklaşan Özel Günler | Özel Gün Mail | Anket |Bildirim |
 |---------------|-------------------|--------------|-------|
-| ![ozel_gun_ekleme](https://github.com/user-attachments/assets/ec4efeda-0557-4866-917a-5c8e53d2ac6b) | ![yaklasan_ozel_gunler](https://github.com/user-attachments/assets/9c83d7d0-e7e1-478f-ba65-ab4915d9b4f1) | ![ozel_gun_mail](https://github.com/user-attachments/assets/d6e8517e-2257-41f7-8c9e-4b1166a0ed36) | ![anket_sayfasi](https://github.com/user-attachments/assets/e8fe4887-a7b7-41bf-ba5d-2afb79717bf2) |
+| ![ozel_gun_ekleme](https://github.com/user-attachments/assets/ec4efeda-0557-4866-917a-5c8e53d2ac6b) | ![yaklasan_ozel_gunler](https://github.com/user-attachments/assets/9c83d7d0-e7e1-478f-ba65-ab4915d9b4f1) | ![ozel_gun_mail](https://github.com/user-attachments/assets/d6e8517e-2257-41f7-8c9e-4b1166a0ed36) | ![anket_sayfasi](https://github.com/user-attachments/assets/e8fe4887-a7b7-41bf-ba5d-2afb79717bf2) |![ozel_gun_notification](https://github.com/user-attachments/assets/f1b42077-f7a4-4f03-afb3-1412517ec590)
 
-![ozel_gun_notification](https://github.com/user-attachments/assets/f1b42077-f7a4-4f03-afb3-1412517ec590)
 
 ---
 
