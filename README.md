@@ -28,7 +28,9 @@ Uygulamayı geliştirmeye **app** klasöründeki dosyaları düzenleyerek başla
 ### **Onboarding ve Giriş Sayfaları**
 | Onboarding Ekranı | Giriş Sayfası |
 |-------------------|--------------|
-| ![onboarding_screen](https://github.com/user-attachments/assets/6025bdb1-2d31-4f87-821f-e6531b5bb254) | ![login_sayfsai](https://github.com/user-attachments/assets/a2488eda-fdac-408d-96db-358f16c3f91c) |
+![onboarding_screen](https://github.com/user-attachments/assets/1e4505af-8f04-4515-ba89-ed27d30031a6)
+![login_sayfsai](https://github.com/user-attachments/assets/7090a893-5329-4c10-916b-70a077905382)
+
 
 ### **Ana Sayfa ve Profil Yönetimi**
 | Ana Sayfa | Yeni Profil Ekleme | Profil Bilgilerini Güncelleme |
@@ -51,6 +53,7 @@ Uygulamayı geliştirmeye **app** klasöründeki dosyaları düzenleyerek başla
 | ![ozel_gun_ekleme_sayfasi](https://github.com/user-attachments/assets/ec4efeda-0557-4866-917a-5c8e53d2ac6b) | ![yaklasan_ozel_gunler_bilgilendirme](https://github.com/user-attachments/assets/9c83d7d0-e7e1-478f-ba65-ab4915d9b4f1) | ![yaklasan_ozel_gun_mail](https://github.com/user-attachments/assets/d6e8517e-2257-41f7-8c9e-4b1166a0ed36) | ![anket_sayfasi](https://github.com/user-attachments/assets/e8fe4887-a7b7-41bf-ba5d-2afb79717bf2) |
 
 ---
+![yaklasan_ozel_gun_notification](https://github.com/user-attachments/assets/f1b42077-f7a4-4f03-afb3-1412517ec590)
 
 ## 🔄 Projenizi Sıfırlayın
 Yeni bir projeye başlamak için şu komutu çalıştırabilirsiniz:
