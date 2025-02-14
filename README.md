@@ -22,7 +22,7 @@ Bu komut çalıştırıldığında aşağıdaki seçenekler sunulacaktır:
 Geliştirmeye başlamak için **app** klasöründeki dosyaları düzenleyebilirsiniz. Proje, [dosya tabanlı yönlendirme](https://docs.expo.dev/router/introduction) kullanmaktadır.
 
 ---
-Sürpriz Hediye Uygulaması – Özet
+Sürpriz Hediye Uygulaması
 
 Sürpriz Hediye Uygulaması, kullanıcıların hediye seçimi ve satın alma sürecini kolaylaştıran, zaman tasarrufu sağlayan ve alışveriş deneyimini eğlenceli hale getiren bir mobil platformdur. Uygulama, kullanıcıların belirlediği bütçe ve tercihler doğrultusunda kişiselleştirilmiş hediye önerileri sunar. Kullanıcılar, hediye alacakları kişiye dair kısa bir anketi doldurarak sistemin en uygun seçenekleri belirlemesini sağlar.
 
@@ -31,6 +31,17 @@ Uygulamanın en dikkat çekici özelliği, sürpriz faktörünü ön planda tutm
 Ayrıca uygulama, yaklaşan özel günler için hatırlatıcılar sunarak kullanıcıların hediye alma sürecini önceden planlamalarına yardımcı olur. Hediye seçiminde yaşanan kararsızlık, zaman kaybı ve bütçe planlama sorunlarına akıllı öneriler ve kullanıcı dostu bir arayüz ile çözüm sunar.
 
 Sürpriz Hediye Uygulaması, bireysel ve profesyonel bağlamda hediyeleşmeyi daha keyifli ve zahmetsiz hale getirerek, kullanıcılarına modern, pratik ve eğlenceli bir alışveriş deneyimi sunmayı amaçlamaktadır.
+Bu proje, bir mobil uygulama için geliştirilmiş bir Expo tabanlı React Native uygulamasıdır. Uygulama, kullanıcıların çeşitli özelliklerden yararlanabileceği bir platform sağlar. Kullanıcılar, hesap oluşturma, profil güncelleme, şifre değiştirme, adres bilgilerini yönetme gibi temel işlemleri gerçekleştirebilirler. Ayrıca, özel gün takibi, kargo takip, anketler gibi ekstra işlevler de uygulamada mevcuttur.
+
+Proje şu ana başlıkları kapsar:
+
+Kullanıcı Yönetimi: Onboarding, giriş, profil oluşturma, güncelleme ve şifre değişikliği işlemleri.
+Adres ve Kargo Takibi: Kullanıcıların adres bilgilerini yönetebileceği, kargo durumlarını takip edebileceği ekranlar.
+Özel Gün Yönetimi: Kullanıcıların özel günlerini ekleyebileceği, yaklaşan özel günleri görebileceği bir özellik.
+Anketler: Kullanıcıların anketlere katılabildiği bir sistem.
+Bildirimler: Kullanıcılara çeşitli bildirimlerin gönderildiği bir sistem.
+Proje, React Native ile geliştirilmiş olup Expo framework'ü kullanılarak geliştirilmiştir. Hedef, kullanıcı dostu bir arayüz ile mobil uygulama deneyimini kolaylaştırmaktır.
+
 
 ## 📱 Uygulama Ekranları
 
