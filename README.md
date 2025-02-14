@@ -28,7 +28,8 @@ Uygulamayı geliştirmeye **app** klasöründeki dosyaları düzenleyerek başla
 ### **Onboarding ve Giriş Sayfaları**
 | Onboarding Ekranı | Giriş Sayfası |
 |-------------------|--------------|
-| ![onboarding_screen](https://github.com/user-attachments/assets/6025bdb1-2d31-4f87-821f-e6531b5bb254) | ![login_sayfsai](https://github.com/user-attachments/assets/a2488eda-fdac-408d-96db-358f16c3f91c) |
+| ![onboarding_screen]![onboarding_screen](https://github.com/user-attachments/assets/bdfc5926-c4f0-4fa0-847d-d0f04875cee7)
+ | ![login_sayfsai](https://github.com/user-attachments/assets/a2488eda-fdac-408d-96db-358f16c3f91c) |
 
 ### **Ana Sayfa ve Profil Yönetimi**
 | Ana Sayfa | Yeni Profil Ekleme | Profil Bilgilerini Güncelleme |
