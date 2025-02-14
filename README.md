@@ -63,16 +63,6 @@ Expo topluluğuna katılarak geliştirme sürecinizde destek alabilirsiniz:
 
 Aşağıda, uygulamanızın bazı temel ekranlarını görebilirsiniz:
 
-### 🏠 **Onboarding Ekranı**
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/6025bdb1-2d31-4f87-821f-e6531b5bb254" width="300" />
-</p>
-
-### 🔐 **Giriş Ekranı**
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/a2488eda-fdac-408d-96db-358f16c3f91c" width="300" />
-</p>
-
 ### 🏠 **Ana Sayfa**
 <p align="center">
   <img src="https://github.com/user-attachments/assets/9686d75a-c8db-49d8-8520-59130d38a743" width="300" />
