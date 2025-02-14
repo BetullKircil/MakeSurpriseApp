@@ -29,12 +29,14 @@ Uygulamayı geliştirmeye **app** klasöründeki dosyaları düzenleyerek başla
 | Onboarding Ekranı | Giriş Sayfası |
 |-------------------|--------------|
 | ![onboarding_screen]![onboarding_screen](https://github.com/user-attachments/assets/bdfc5926-c4f0-4fa0-847d-d0f04875cee7)
- | ![login_sayfsai](https://github.com/user-attachments/assets/a2488eda-fdac-408d-96db-358f16c3f91c) |
+ | ![login_sayfsai] ![login_sayfsai](https://github.com/user-attachments/assets/c11215dd-b325-4cf8-b963-d5483e9a0de4)
+|
 
 ### **Ana Sayfa ve Profil Yönetimi**
 | Ana Sayfa | Yeni Profil Ekleme | Profil Bilgilerini Güncelleme |
 |----------|-------------------|-------------------------|
-| ![ana_Sayfa](https://github.com/user-attachments/assets/9686d75a-c8db-49d8-8520-59130d38a743) | ![yeni_profil_ekleme](https://github.com/user-attachments/assets/36da478c-b7a6-4f76-8ccf-6c70d13b5290) | ![profil_bilgilerini_guncelleme](https://github.com/user-attachments/assets/26d3a42e-24d1-44d1-8c61-aca6a1d6436e) |
+| ![ana_Sayfa](https://github.com/user-attachments/assets/9686d75a-c8db-49d8-8520-59130d38a743) | ![yeni_profil_ekleme]![yeni_profil_ekleme](https://github.com/user-attachments/assets/ae33f4b3-5465-4c88-9a8a-1dcf9433fcd3)
+ | ![profil_bilgilerini_guncelleme](https://github.com/user-attachments/assets/26d3a42e-24d1-44d1-8c61-aca6a1d6436e) |
 
 ### **Güvenlik ve Ayarlar**
 | Şifre Değişikliği | Ayarlar Menüsü | Çıkış Yapma Pop-up |
